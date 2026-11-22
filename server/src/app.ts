@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import fs from 'node:fs';
+import mongoose from 'mongoose';
 import { env } from './config/env.js';
 import { errorHandler, notFoundHandler, ok } from './lib/http.js';
 import { authRouter } from './modules/auth/auth.routes.js';
@@ -27,7 +28,35 @@ export const createApp = () => {
   app.use('/uploads', express.static(uploadsDir));
   app.use('/api', rateLimit({ windowMs: 60_000, limit: 600, standardHeaders: 'draft-7', legacyHeaders: false }));
 
-  app.get('/api/health', (_req, res) => ok(res, { status: 'ok', service: 'CineBook API' }));
+  // Health must prove the API is alive AND that its database is reachable.
+  // A static "ok" here hides the exact failure that causes frontend Network Errors.
+  app.get('/api/health', async (_req, res) => {
+    const states = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+    let databaseOk = mongoose.connection.readyState === 1;
+    let latencyMs: number | null = null;
+    if (databaseOk) {
+      try {
+        const started = Date.now();
+        await mongoose.connection.db?.admin().ping();
+        latencyMs = Date.now() - started;
+      } catch {
+        databaseOk = false;
+      }
+    }
+    const payload = {
+      status: databaseOk ? 'ok' : 'degraded',
+      service: 'CineBook API',
+      database: {
+        connected: databaseOk,
+        state: states[mongoose.connection.readyState] ?? 'unknown',
+        name: mongoose.connection.name || null,
+        host: mongoose.connection.host || null,
+        latencyMs,
+      },
+      timestamp: new Date().toISOString(),
+    };
+    res.status(databaseOk ? 200 : 503).json({ success: databaseOk, data: payload });
+  });
 
   app.use('/api/auth', authRouter);
   app.use('/api/movies', moviesRouter);

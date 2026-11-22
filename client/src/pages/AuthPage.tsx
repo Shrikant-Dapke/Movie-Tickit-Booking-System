@@ -86,7 +86,7 @@ function LoginForm() {
       const from = (location.state as { from?: string } | null)?.from;
       navigate(from || (user.role === 'admin' ? '/admin' : '/'), { replace: true });
     } catch (error) {
-      applyApiError(error, setError, toast);
+      applyApiError(error, setError, toast, 'Sign in failed');
     } finally {
       setSubmitting(false);
     }
@@ -151,7 +151,7 @@ function RegisterForm() {
       toast.success('Account created', `Welcome to CineBook, ${user.name.split(' ')[0]}!`);
       navigate('/', { replace: true });
     } catch (error) {
-      applyApiError(error, setError, toast);
+      applyApiError(error, setError, toast, 'Registration failed');
     } finally {
       setSubmitting(false);
     }
@@ -209,6 +209,7 @@ function applyApiError<T extends FieldValues>(
   error: unknown,
   setError: UseFormSetError<T>,
   toast: ReturnType<typeof useToast>,
+  title: string,
 ) {
   if (error instanceof ApiError) {
     if (error.errors) {
@@ -216,8 +217,15 @@ function applyApiError<T extends FieldValues>(
         setError(field as Parameters<UseFormSetError<T>>[0], { message }),
       );
     }
-    toast.error('Sign in failed', error.message);
+    // A status of 0 means the request never reached the API (server down,
+    // wrong base URL, CORS or DNS). Say that explicitly instead of blaming
+    // the credentials.
+    const message =
+      error.status === 0
+        ? 'Cannot reach the API server. Confirm the backend is running on port 5000 and VITE_API_URL is correct.'
+        : error.message;
+    toast.error(title, message);
   } else {
-    toast.error('Something went wrong', 'Please try again in a moment.');
+    toast.error(title, error instanceof Error ? error.message : 'Please try again in a moment.');
   }
 }

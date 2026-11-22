@@ -8,7 +8,8 @@
     "client"
   ],
   "scripts": {
-    "dev": "npm run dev:server & npm run dev:client",
+    "dev": "concurrently -n API,WEB -c cyan,magenta \"npm:dev:server\" \"npm:dev:client\"",
+    "health": "node -e \"fetch('http://127.0.0.1:5000/api/health').then(r=>r.json()).then(d=>console.log(JSON.stringify(d,null,2))).catch(e=>{console.error('API unreachable:',e.message);process.exit(1)})\"",
     "dev:server": "npm --workspace @cinebook/server run dev",
     "dev:client": "npm --workspace @cinebook/client run dev",
     "build": "npm --workspace @cinebook/server run build && npm --workspace @cinebook/client run build",
@@ -19,5 +20,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7"
   }
 }

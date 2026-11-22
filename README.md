@@ -47,18 +47,19 @@ mongosh --eval "rs.initiate({_id:'rs0',members:[{_id:0,host:'127.0.0.1:27017'}]}
 
 ### Install and run
 
-```bash
+```powershell
 npm install
-cp server/.env.example server/.env
-cp client/.env.example client/.env
+copy server\.env.example server\.env
+copy client\.env.example client\.env
 # Edit server/.env and set a strong JWT_SECRET (32+ random characters)
 npm run seed                 # realistic movies, theatres, screens, seats, shows, promo codes, demo users
-npm run dev                  # API on :5000, client on :5173
+npm run dev                  # API on :5000, client on :5173 (runs both in parallel)
+npm run health               # confirms API + MongoDB connectivity
 ```
 
 Open **http://localhost:5173**.
 
-If MongoDB runs without a replica set, browsing works but booking will fail because transactions are unavailable. Use the replica-set command above for the jury demonstration.
+If MongoDB runs without a replica set, browsing works but booking will fail because transactions are unavailable. Use the replica-set command above for the jury demonstration. The API now **retries** the DB connection and logs a clear message instead of silently exiting; `GET /api/health` reports `database.connected`.
 
 **No local MongoDB?** `npm --workspace @cinebook/server run demo:memory` starts an in-memory replica set, seeds it and runs the API; run `npm run dev:client` in another terminal.
 
@@ -79,7 +80,10 @@ Seed data: 8 movies (7 showing, 1 upcoming), 3 theatres across Pune/Mumbai/Benga
 npm run typecheck     # TypeScript, both workspaces
 npm run build         # production builds, both workspaces
 npm test              # 15 integration tests (in-memory replica set)
+npm run health        # live API + database status
 ```
+
+See `docs/DEPLOYMENT.md` for exact Windows commands, production deployment of frontend and backend separately, environment variables and security notes.
 
 The test suite covers: registration/login, RBAC denials, movie search/filters, show availability, seat-map states, the 8-seat boundary, complete booking + QR ticket, **two customers racing for one seat**, simulated payment failure, booking history, admin CRUD, expired holds, invalid inputs and the full end-to-end customer workflow.
 

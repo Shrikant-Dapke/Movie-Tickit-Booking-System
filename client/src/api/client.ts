@@ -58,8 +58,10 @@ export class ApiError extends Error {
   }
 }
 
+// In development, `/api` is proxied by Vite to http://127.0.0.1:5000.
+// Production deployments set VITE_API_URL to the deployed API origin.
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: { 'Content-Type': 'application/json' },
   timeout: 20000,
 });
@@ -102,9 +104,11 @@ api.interceptors.response.use(
 
     const message =
       payload?.message ||
-      (typeof error.message === 'string' && error.message !== 'Request failed with status code 401'
-        ? error.message
-        : 'Your session has expired. Please sign in again.');
+      (status === 0
+        ? 'Cannot reach the API server. Check that the backend is running and that VITE_API_URL points to it.'
+        : typeof error.message === 'string' && error.message !== 'Request failed with status code 401'
+          ? error.message
+          : 'Your session has expired. Please sign in again.');
     throw new ApiError(message, status, payload?.errors, payload?.data);
   },
 );
