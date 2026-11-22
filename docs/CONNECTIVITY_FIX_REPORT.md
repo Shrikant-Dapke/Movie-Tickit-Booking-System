@@ -92,4 +92,4 @@ npm run health
 ## 7. Remaining notes
 
 - The local `server/.env` and `client/.env` created during this fix are intentionally **not committed**.
-- The fix commits must be pushed to GitHub for the remote branch to contain them (see final handoff status).
+- Fix commit `89a4cb7` was pushed to `origin/main`; the remote branch now contains all fixes.
