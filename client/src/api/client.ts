@@ -71,7 +71,10 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 function isAuthEndpoint(url?: string): boolean {
-  return !!url && /\/auth\/(login|register)$/.test(url);
+  // `/auth/me` is the session probe: a 401 there is handled by AuthProvider,
+  // which clears the token and lets RequireAuth redirect through the router.
+  // A hard window redirect here would race with session restoration on reload.
+  return !!url && /\/auth\/(login|register|me|logout)$/.test(url);
 }
 
 api.interceptors.response.use(
@@ -108,7 +111,7 @@ api.interceptors.response.use(
 
 /** Axios `request<T, R>` lets us declare the unwrapped (interceptor) return type. */
 function request<T>(config: AxiosRequestConfig): Promise<T> {
-  return api.request<T, T>(config);
+  return api.request<T, T>(config) as unknown as Promise<T>;
 }
 
 const get = <T>(url: string, params?: Record<string, unknown>) =>
@@ -175,7 +178,7 @@ export const bookingsApi = {
   create: (data: { showId: string; seats: string[]; promoCode?: string }) =>
     post<Booking>('/bookings', data),
   pay: (id: string, data: { method: PaymentMethod; outcome: PaymentOutcome }) =>
-    post<Booking>(`/bookings/${id}/pay`, data),
+    post<{ booking: Booking; payment: Payment }>(`/bookings/${id}/pay`, data),
   mine: () => get<Booking[]>('/bookings/mine'),
   get: (id: string) => get<Booking>(`/bookings/${id}`),
   ticket: (id: string) => get<TicketData>(`/bookings/${id}/ticket`),
@@ -193,6 +196,22 @@ export const adminApi = {
   updateBooking: (id: string, data: { status: BookingStatus }) =>
     patch<Booking>(`/admin/bookings/${id}`, data),
   users: () => get<User[]>('/admin/users'),
+
+  /** Uploads a movie poster as multipart/form-data and returns its served URL. */
+  uploadPoster: (file: File): Promise<{ url: string; originalName: string }> => {
+    const formData = new FormData();
+    formData.append('poster', file);
+
+    return request<{ url: string; originalName: string }>({
+      method: 'POST',
+      url: '/admin/uploads/poster',
+      data: formData,
+      // The axios instance sets application/json globally, which makes axios
+      // serialise FormData into JSON. Removing it here lets the browser send
+      // multipart/form-data with the correct boundary for multer.
+      headers: { 'Content-Type': null },
+    });
+  },
 };
 
 export type { SeatCategory };

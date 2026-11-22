@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   Clapperboard,
   LayoutDashboard,
@@ -30,9 +30,9 @@ export function Logo({ compact = false }: { compact?: boolean }) {
 }
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Movies', end: true },
-  { to: '/dashboard?tab=bookings', label: 'My Bookings', end: false },
-  { to: '/dashboard', label: 'Dashboard', end: true },
+  { to: '/', label: 'Movies', key: 'movies' },
+  { to: '/dashboard?tab=bookings', label: 'My Bookings', key: 'bookings' },
+  { to: '/dashboard', label: 'Dashboard', key: 'dashboard' },
 ];
 
 export function AppLayout() {
@@ -63,12 +63,19 @@ export function AppLayout() {
     navigate('/');
   };
 
-  const navClass = ({ isActive }: { isActive: boolean }) =>
+  const isNavActive = (key: string) => {
+    if (key === 'movies') return location.pathname === '/';
+    if (key === 'bookings') return location.pathname === '/dashboard' && location.search.includes('tab=bookings');
+    if (key === 'dashboard') return location.pathname === '/dashboard' && !location.search.includes('tab=bookings');
+    return false;
+  };
+
+  const navClass = (active: boolean) =>
     cn(
       'relative rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-      isActive ? 'text-white' : 'text-slate-400 hover:text-white',
+      active ? 'text-white' : 'text-slate-400 hover:text-white',
       'after:absolute after:inset-x-3 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-brand-500 after:transition-transform',
-      isActive ? 'after:scale-x-100' : 'after:scale-x-0',
+      active ? 'after:scale-x-100' : 'after:scale-x-0',
     );
 
   return (
@@ -79,14 +86,14 @@ export function AppLayout() {
 
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
             {NAV_ITEMS.map((item) => (
-              <NavLink key={item.label} to={item.to} end={item.end} className={navClass}>
+              <Link key={item.label} to={item.to} className={navClass(isNavActive(item.key))}>
                 {item.label}
-              </NavLink>
+              </Link>
             ))}
             {isAdmin && (
-              <NavLink to="/admin" className={navClass}>
+              <Link to="/admin" className={navClass(location.pathname.startsWith('/admin'))}>
                 Admin
-              </NavLink>
+              </Link>
             )}
           </nav>
 
@@ -157,14 +164,27 @@ export function AppLayout() {
           <div className="border-t border-white/[0.07] bg-ink-900/95 p-4 lg:hidden animate-fade-up">
             <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
               {NAV_ITEMS.map((item) => (
-                <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => cn('rounded-lg px-3 py-2.5 text-sm font-medium', isActive ? 'bg-brand-500/10 text-white' : 'text-slate-400')}>
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  className={cn(
+                    'rounded-lg px-3 py-2.5 text-sm font-medium',
+                    isNavActive(item.key) ? 'bg-brand-500/10 text-white' : 'text-slate-400',
+                  )}
+                >
                   {item.label}
-                </NavLink>
+                </Link>
               ))}
               {isAdmin && (
-                <NavLink to="/admin" className={({ isActive }) => cn('rounded-lg px-3 py-2.5 text-sm font-medium', isActive ? 'bg-brand-500/10 text-white' : 'text-slate-400')}>
+                <Link
+                  to="/admin"
+                  className={cn(
+                    'rounded-lg px-3 py-2.5 text-sm font-medium',
+                    location.pathname.startsWith('/admin') ? 'bg-brand-500/10 text-white' : 'text-slate-400',
+                  )}
+                >
                   Admin
-                </NavLink>
+                </Link>
               )}
             </nav>
             <div className="mt-4 border-t border-white/[0.07] pt-4">

@@ -31,7 +31,9 @@ showsRouter.get(
       filter.theatre = { $in: theatres.map((t) => t._id) };
     }
     const shows = await populateShow(Show.find(filter)).sort({ date: 1, time: 1 });
-    ok(res, shows);
+    // Hide shows that have already started; they cannot be booked.
+    const now = Date.now();
+    ok(res, shows.filter((show: any) => new Date(`${show.date}T${show.time}:00`).getTime() > now));
   }),
 );
 

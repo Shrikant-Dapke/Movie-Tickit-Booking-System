@@ -6,7 +6,10 @@ import { Router } from 'express';
 import { authenticate, requireAdmin } from '../../middleware/auth.js';
 import { asyncHandler, badRequest, ok } from '../../lib/http.js';
 
-export const uploadsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'uploads');
+// Both `src/modules/uploads/` and `dist/modules/uploads/` are three levels
+// below the server package root, so this resolves to `server/uploads` in dev
+// and production alike.
+export const uploadsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'uploads');
 
 const storage = multer.diskStorage({
   destination: (_req, _file, done) => done(null, uploadsDir),

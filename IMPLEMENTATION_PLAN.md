@@ -42,7 +42,7 @@ CineBook/
 | **8 — Dashboards** | R8, R9 | client pages + admin APIs | Customer history/dashboard; admin metrics, CRUD, booking management | TC-10, TC-11 | ✅ Done |
 | **9 — UI/UX & responsive** | R10 | design system, all pages | Dark cinematic theme, skeletons, empty/error states, toasts, dialogs, mobile | client typecheck + build | ✅ Done |
 | **10 — Tests & fixes** | R13, jury §3 | `server/src/tests/*` | ≥5 named cases: positive, negative, boundary, exceptional, concurrency | 15/15 executed and passing | ✅ Done |
-| **11 — Delivery** | R14, jury §4–7 | `README.md`, agile docs, `FINAL_DELIVERY_REPORT.md` | Working demo, seed credentials, docs, commits | final verification | 🔄 In progress |
+| **11 — Delivery** | R14, jury §4–7 | `README.md`, agile docs, `FINAL_DELIVERY_REPORT.md` | Working demo, seed credentials, docs, commits | live browser walkthrough + final verification | ✅ Done |
 
 ---
 

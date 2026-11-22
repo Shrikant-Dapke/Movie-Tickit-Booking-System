@@ -30,7 +30,10 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [token, setTokenState] = useState<string | null>(() => getToken());
-  const [user, setUser] = useState<User | null>(null);
+  // Locally established session (login/register/profile edit). During a page
+  // reload, the restored user comes directly from the query below so that
+  // RequireAuth never observes a null user after the query has resolved.
+  const [sessionUser, setSessionUser] = useState<User | null>(null);
 
   const meQuery = useQuery({
     queryKey: ['auth', 'me'],
@@ -40,15 +43,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     staleTime: 5 * 60 * 1000,
   });
 
-  useEffect(() => {
-    if (meQuery.data) setUser(meQuery.data);
-  }, [meQuery.data]);
+  const user: User | null = meQuery.data ?? sessionUser;
 
   useEffect(() => {
     if (meQuery.isError && token) {
       clearToken();
       setTokenState(null);
-      setUser(null);
+      setSessionUser(null);
     }
   }, [meQuery.isError, token]);
 
@@ -57,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await authApi.login({ email, password });
       setToken(result.token);
       setTokenState(result.token);
-      setUser(result.user);
+      setSessionUser(result.user);
       queryClient.setQueryData(['auth', 'me'], result.user);
       return result.user;
     },
@@ -69,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await authApi.register({ name, email, password });
       setToken(result.token);
       setTokenState(result.token);
-      setUser(result.user);
+      setSessionUser(result.user);
       queryClient.setQueryData(['auth', 'me'], result.user);
       return result.user;
     },
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       clearToken();
       setTokenState(null);
-      setUser(null);
+      setSessionUser(null);
       queryClient.removeQueries({ queryKey: ['auth', 'me'] });
       queryClient.removeQueries({ queryKey: ['bookings'] });
     }
@@ -97,14 +98,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryFn: authApi.me,
       staleTime: 0,
     });
-    setUser(result);
+    setSessionUser(result);
     return result;
   }, [queryClient]);
 
   const updateProfile = useCallback(
     async (data: { name?: string; phone?: string }) => {
       const result = await authApi.updateMe(data);
-      setUser(result);
+      setSessionUser(result);
       queryClient.setQueryData(['auth', 'me'], result);
       return result;
     },
@@ -117,15 +118,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       token,
       isAdmin: user?.role === 'admin',
       isAuthenticated: !!token && !!user,
-      isLoading: !!token && meQuery.isLoading,
+      // Cover the pending tick before TanStack Query flips fetchStatus to
+      // 'fetching' — otherwise RequireAuth can redirect on a full page reload
+      // before the restored session has been hydrated.
+      isLoading: !!token && (meQuery.isPending || meQuery.isFetching || meQuery.isLoading),
       login,
       register,
       logout,
       refreshMe,
       updateProfile,
-      setUser,
+      setUser: setSessionUser,
     }),
-    [user, token, meQuery.isLoading, login, register, logout, refreshMe, updateProfile],
+    [user, token, meQuery.isLoading, meQuery.isPending, meQuery.isFetching, login, register, logout, refreshMe, updateProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

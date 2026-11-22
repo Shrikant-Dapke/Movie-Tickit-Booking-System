@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, type FieldValues, type UseFormSetError } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ArrowRight, AtSign, KeyRound, LockKeyhole, ShieldCheck, UserRound } from 'lucide-react';
@@ -205,14 +205,16 @@ function RegisterForm() {
   );
 }
 
-function applyApiError(
+function applyApiError<T extends FieldValues>(
   error: unknown,
-  setError: (field: string, options: { message: string }) => void,
+  setError: UseFormSetError<T>,
   toast: ReturnType<typeof useToast>,
 ) {
   if (error instanceof ApiError) {
     if (error.errors) {
-      Object.entries(error.errors).forEach(([field, message]) => setError(field, { message }));
+      Object.entries(error.errors).forEach(([field, message]) =>
+        setError(field as Parameters<UseFormSetError<T>>[0], { message }),
+      );
     }
     toast.error('Sign in failed', error.message);
   } else {

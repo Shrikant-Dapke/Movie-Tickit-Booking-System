@@ -60,6 +60,8 @@ Open **http://localhost:5173**.
 
 If MongoDB runs without a replica set, browsing works but booking will fail because transactions are unavailable. Use the replica-set command above for the jury demonstration.
 
+**No local MongoDB?** `npm --workspace @cinebook/server run demo:memory` starts an in-memory replica set, seeds it and runs the API; run `npm run dev:client` in another terminal.
+
 ## Demo credentials
 
 | Role | Email | Password |

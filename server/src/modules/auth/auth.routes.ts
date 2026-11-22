@@ -42,7 +42,15 @@ authRouter.post(
 
 authRouter.post('/logout', authenticate, (_req, res) => ok(res, { message: 'Signed out' }, 'You have been signed out'));
 
-authRouter.get('/me', authenticate, (req, res) => ok(res, req.user, 'Current session'));
+authRouter.get(
+  '/me',
+  authenticate,
+  asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user!.sub);
+    if (!user) throw unauthorized('Account not found');
+    ok(res, user.toJSON(), 'Current session');
+  }),
+);
 
 authRouter.patch(
   '/me',

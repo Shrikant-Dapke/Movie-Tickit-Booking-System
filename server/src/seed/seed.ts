@@ -146,6 +146,9 @@ const run = async () => {
       const chosen = (matching.length ? matching : theatreScreens)[day % (matching.length || theatreScreens.length)];
       for (const time of ['10:30', '13:45', '17:15', '20:30']) {
         if (movie.status === 'upcoming' && day < 3) continue;
+        // Never seed a show that has already started — otherwise customers can
+        // select it but checkout is correctly rejected.
+        if (new Date(`${date}T${time}:00`).getTime() <= Date.now()) continue;
         shows.push({
           movie: movie._id,
           theatre: theatre._id,

@@ -33,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           id={inputId}
           aria-invalid={!!error || undefined}
           aria-describedby={error ? `${inputId}-error` : undefined}
-          className={cn('field-base', icon && 'pl-10', error && 'border-brand-500 focus:border-brand-500', className)}
+          className={cn('field-base', icon ? 'pl-10' : undefined, error && 'border-brand-500 focus:border-brand-500', className)}
           {...props}
         />
       </div>

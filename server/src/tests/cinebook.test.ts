@@ -73,6 +73,8 @@ describe('TC-01 — Customer registration, login and session (positive)', () => 
     const me = await api().get('/api/auth/me').set('Authorization', `Bearer ${loggedIn.body.data.token}`);
     expect(me.status).toBe(200);
     expect(me.body.data.name).toBe('Asha');
+    expect(me.body.data.email).toBe('asha@example.com');
+    expect(me.body.data.id).toEqual(expect.any(String));
   });
 });
 

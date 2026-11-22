@@ -7,7 +7,6 @@ import { z } from 'zod';
 import {
   AlertTriangle,
   ArrowLeft,
-  ArrowRight,
   BadgePercent,
   CheckCircle2,
   CreditCard,
@@ -118,7 +117,7 @@ export default function CheckoutPage() {
         outcome: forcedOutcome ?? outcome,
       });
       toast.success('Payment successful (simulated)', 'Your booking is confirmed.');
-      navigate(`/booking/${confirmed.id}/confirmation`, { replace: true });
+      navigate(`/booking/${confirmed.booking.id}/confirmation`, { replace: true });
     } catch (error) {
       if (error instanceof ApiError && error.status === 402) {
         const data = error.data as { booking?: Booking; payment?: Payment } | undefined;
