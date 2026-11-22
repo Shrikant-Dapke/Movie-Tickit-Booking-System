@@ -1,15 +1,23 @@
 {
   "name": "cinebook",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
+  "description": "CineBook — premium movie ticket booking platform (MERN)",
   "workspaces": [
-    "client",
-    "server"
+    "server",
+    "client"
   ],
   "scripts": {
-    "dev:client": "npm --workspace client run dev",
-    "dev:server": "npm --workspace server run dev",
-    "build": "npm --workspace client run build",
-    "seed": "npm --workspace server run seed"
+    "dev": "npm run dev:server & npm run dev:client",
+    "dev:server": "npm --workspace @cinebook/server run dev",
+    "dev:client": "npm --workspace @cinebook/client run dev",
+    "build": "npm --workspace @cinebook/server run build && npm --workspace @cinebook/client run build",
+    "start": "npm --workspace @cinebook/server run start",
+    "seed": "npm --workspace @cinebook/server run seed",
+    "test": "npm --workspace @cinebook/server run test",
+    "typecheck": "npm --workspace @cinebook/server run typecheck && npm --workspace @cinebook/client run typecheck"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
