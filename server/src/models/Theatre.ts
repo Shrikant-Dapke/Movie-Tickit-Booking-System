@@ -5,9 +5,12 @@ const theatreSchema = new Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 120 },
     city: { type: String, required: true, trim: true, index: true },
+    area: { type: String, trim: true },
+    chain: { type: String, trim: true },
     address: { type: String, required: true, trim: true },
     phone: String,
     amenities: { type: [String], default: [] },
+    seeded: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

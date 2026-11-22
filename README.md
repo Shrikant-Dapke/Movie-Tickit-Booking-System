@@ -72,14 +72,16 @@ If MongoDB runs without a replica set, browsing works but booking will fail beca
 
 Promo codes: `CINEBOOK10` (10% up to ₹150) and `FIRSTSHOW20` (20% up to ₹250 on ₹500+).
 
-Seed data: 8 movies (7 showing, 1 upcoming), 3 theatres across Pune/Mumbai/Bengaluru, 9 screens with 100 seats each across Regular/Premium/Recliner categories, and 7 days of shows.
+Seed data: **25 realistic movies** (24 showing, 1 upcoming) with verified posters/backdrops, directors, cast, synopses and trailers; **10 theatres** across Pune, Mumbai, Bengaluru, Hyderabad and Chennai with 23 screens and 2,090 seats; ~533 future shows across morning/afternoon/evening slots; 4 demo users and 5 labelled demo bookings covering confirmed, completed, cancelled and failed-payment scenarios; 6 promotions including percentage, fixed-value, usage-limited and expired offers.
+
+`npm run seed` is **idempotent** (deterministic IDs + upserts) and preserves real accounts/bookings. To remove only demo data and start clean: `npm run seed:reset && npm run seed`.
 
 ## Verification commands
 
 ```bash
 npm run typecheck     # TypeScript, both workspaces
 npm run build         # production builds, both workspaces
-npm test              # 15 integration tests (in-memory replica set)
+npm test              # 16 integration tests (in-memory replica set)
 npm run health        # live API + database status
 ```
 

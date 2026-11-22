@@ -10,6 +10,7 @@ const seatHoldSchema = new Schema(
     status: { type: String, enum: ['held', 'booked'], default: 'held', index: true },
     booking: { type: Schema.Types.ObjectId, ref: 'Booking' },
     expiresAt: { type: Date, required: true },
+    seeded: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

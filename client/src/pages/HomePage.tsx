@@ -52,6 +52,23 @@ export default function HomePage() {
   const trending = movies.filter((movie) => movie.trending && !movie.featured);
   const hero = featured[0] ?? movies[0] ?? allMovies.find((movie) => movie.featured);
 
+  // Discovery rails are derived from the full catalogue already fetched above —
+  // no hardcoded movie records, and they stay current as the seed grows.
+  const popular = useMemo(
+    () => [...allMovies].sort((a, b) => (b.popularity ?? b.rating) - (a.popularity ?? a.rating)).slice(0, 8),
+    [allMovies],
+  );
+  const topGenres = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const movie of allMovies) {
+      for (const genre of movie.genre ?? []) counts.set(genre, (counts.get(genre) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, 3)
+      .map(([genre]) => genre);
+  }, [allMovies]);
+
   const genreOptions = useMemo(() => uniqueOptions(allMovies.flatMap((movie) => movie.genre)), [allMovies]);
   const languageOptions = useMemo(() => uniqueOptions(allMovies.map((movie) => movie.language)), [allMovies]);
   const formatOptions = useMemo(() => uniqueOptions(allMovies.flatMap((movie) => movie.format)), [allMovies]);
@@ -76,11 +93,14 @@ export default function HomePage() {
             <PosterImage
               src={hero.backdrop || hero.poster}
               alt={hero.title}
+              variant="backdrop"
+              eager
               className="h-full w-full"
-              imgClassName="scale-105 object-cover object-center"
+              imgClassName="scale-105"
             />
             <div className="hero-shade absolute inset-0" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(229,9,20,0.16),transparent_45%)]" />
           </div>
           <div className="container-cine relative flex min-h-[440px] flex-col justify-end py-14 sm:min-h-[520px] sm:py-20">
             <div className="max-w-2xl animate-fade-up">
@@ -209,6 +229,13 @@ export default function HomePage() {
             </section>
           )}
 
+          {(popular.length > 0 || facetsQuery.isLoading) && (
+            <section className="container-cine pb-12">
+              <SectionHeading eyebrow="Audience pulse" title="Popular this week" subtitle="The titles everyone is talking about" />
+              {facetsQuery.isLoading ? <PosterRailSkeleton /> : <PosterRail movies={popular} rank />}
+            </section>
+          )}
+
           <section className="container-cine pb-12" id="now-showing">
             <SectionHeading eyebrow="On the big screen" title="Now showing" subtitle="Grab your seats before they're gone" actionLabel="Browse all" actionTo="#movies" />
             {moviesQuery.isLoading ? (
@@ -226,6 +253,22 @@ export default function HomePage() {
               <Rail movies={trending} />
             </section>
           )}
+
+          {(topGenres.length > 0 || facetsQuery.isLoading) &&
+            topGenres.map((genre) => {
+              const matches = allMovies.filter((movie) => movie.genre?.includes(genre));
+              if (!matches.length && !facetsQuery.isLoading) return null;
+              return (
+                <section className="container-cine pb-12" key={genre}>
+                  <SectionHeading
+                    eyebrow="Explore by genre"
+                    title={`${genre} movies`}
+                    subtitle={facetsQuery.isLoading ? undefined : pluralize(matches.length, 'title') + ' from the catalogue'}
+                  />
+                  {facetsQuery.isLoading ? <PosterRailSkeleton /> : <PosterRail movies={matches.slice(0, 10)} />}
+                </section>
+              );
+            })}
 
           <section className="container-cine pb-12">
             <SectionHeading eyebrow="Coming soon" title="Upcoming" subtitle="Be the first to book when tickets open" />
@@ -253,6 +296,35 @@ function MovieGrid({ movies }: { movies: Movie[] }) {
   );
 }
 
+function PosterRail({ movies, rank = false }: { movies: Movie[]; rank?: boolean }) {
+  return (
+    <div className="scrollbar-thin -mx-1 flex gap-4 overflow-x-auto px-1 pb-3">
+      {movies.map((movie, index) => (
+        <div key={movie.id} className="relative w-[158px] shrink-0 pt-2 sm:w-[186px]">
+          {rank && (
+            <span className="absolute left-1 top-0 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-brand-500/40 bg-ink-950 font-display text-sm font-bold text-brand-300 shadow-lg">
+              {index + 1}
+            </span>
+          )}
+          <MovieCard movie={movie} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PosterRailSkeleton() {
+  return (
+    <div className="scrollbar-thin -mx-1 flex gap-4 overflow-hidden px-1 pb-3">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div key={index} className="w-[158px] shrink-0 sm:w-[186px]">
+          <Skeleton className="aspect-[2/3] w-full rounded-2xl" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function Rail({ movies }: { movies: Movie[] }) {
   return (
     <div className="scrollbar-thin -mx-1 flex gap-4 overflow-x-auto px-1 pb-3">
@@ -265,6 +337,7 @@ function Rail({ movies }: { movies: Movie[] }) {
           <PosterImage
             src={movie.backdrop || movie.poster}
             alt={movie.title}
+            variant="backdrop"
             className="absolute inset-0 h-full w-full"
             imgClassName="group-hover:scale-105"
           />

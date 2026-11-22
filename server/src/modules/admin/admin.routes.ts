@@ -17,6 +17,7 @@ adminRouter.use(authenticate, requireAdmin);
 const withDetails = <T>(query: T): T =>
   (query as any)
     .populate({ path: 'show', populate: [{ path: 'movie' }, { path: 'theatre' }, { path: 'screen' }] })
+    .populate('user')
     .populate('payment') as T;
 
 adminRouter.get(

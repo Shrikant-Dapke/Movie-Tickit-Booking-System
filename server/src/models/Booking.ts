@@ -23,6 +23,9 @@ const bookingSchema = new Schema(
     status: { type: String, enum: ['pending', 'confirmed', 'failed', 'cancelled'], default: 'pending', index: true },
     paymentStatus: { type: String, enum: ['unpaid', 'paid', 'failed', 'refunded'], default: 'unpaid', index: true },
     payment: { type: Schema.Types.ObjectId, ref: 'Payment' },
+    // Demo records are seeded for the jury walkthrough; real user activity is never seeded.
+    seeded: { type: Boolean, default: false, index: true },
+    seedKey: { type: String, index: true },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

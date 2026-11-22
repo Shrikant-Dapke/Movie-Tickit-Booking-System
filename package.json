@@ -15,6 +15,7 @@
     "build": "npm --workspace @cinebook/server run build && npm --workspace @cinebook/client run build",
     "start": "npm --workspace @cinebook/server run start",
     "seed": "npm --workspace @cinebook/server run seed",
+    "seed:reset": "npm --workspace @cinebook/server run seed:reset",
     "test": "npm --workspace @cinebook/server run test",
     "typecheck": "npm --workspace @cinebook/server run typecheck && npm --workspace @cinebook/client run typecheck"
   },

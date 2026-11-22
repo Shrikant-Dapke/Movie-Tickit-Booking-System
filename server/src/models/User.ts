@@ -9,6 +9,8 @@ const userSchema = new Schema(
     role: { type: String, enum: ['customer', 'admin'], default: 'customer', index: true },
     phone: { type: String, trim: true, maxlength: 20 },
     avatar: String,
+    city: { type: String, trim: true },
+    seeded: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

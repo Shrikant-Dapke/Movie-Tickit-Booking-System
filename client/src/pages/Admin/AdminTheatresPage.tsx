@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Building2, MapPin, Plus } from 'lucide-react';
 import { theatresApi } from '@/api/client';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui';
@@ -99,7 +100,15 @@ export default function AdminTheatresPage() {
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-semibold text-white">{theatre.name}</h3>
-                    <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400"><MapPin className="h-3.5 w-3.5" /> {theatre.city}</p>
+                    {theatre.chain && (
+                      <div className="mt-1">
+                        <Badge tone="purple" className="px-2 py-0.5 text-[10px]">{theatre.chain}</Badge>
+                      </div>
+                    )}
+                    <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {[theatre.area, theatre.city].filter(Boolean).join(', ') || '—'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -129,8 +138,14 @@ export default function AdminTheatresPage() {
           <AdminTable headers={['Name', 'City', 'Address', 'Phone', 'Actions']}>
             {theatresQuery.data.map((theatre) => (
               <tr key={theatre.id}>
-                <td className="px-4 py-3 font-semibold text-white">{theatre.name}</td>
-                <td className="px-4 py-3 text-slate-300">{theatre.city}</td>
+                <td className="px-4 py-3 font-semibold text-white">
+                  {theatre.name}
+                  {theatre.chain && <span className="block text-[11px] font-medium text-brand-300">{theatre.chain}</span>}
+                </td>
+                <td className="px-4 py-3 text-slate-300">
+                  {theatre.city}
+                  {theatre.area && <span className="block text-[11px] text-slate-500">{theatre.area}</span>}
+                </td>
                 <td className="px-4 py-3 text-xs text-slate-400">{theatre.address}</td>
                 <td className="px-4 py-3 text-xs text-slate-400">{theatre.phone}</td>
                 <td className="px-4 py-3">

@@ -139,7 +139,11 @@ export default function AdminMoviesPage() {
             <tr key={movie.id}>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <PosterImage src={movie.poster} alt={movie.title} className="h-14 w-10 shrink-0 rounded-md" />
+                  <PosterImage
+                    src={movie.poster}
+                    alt={movie.title}
+                    className="aspect-[2/3] w-10 shrink-0 rounded-md"
+                  />
                   <div className="min-w-0">
                     <p className="font-semibold text-white">{movie.title}</p>
                     <p className="text-xs text-slate-500">{movie.language} · {movie.duration} min</p>

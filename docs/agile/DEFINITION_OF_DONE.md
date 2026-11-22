@@ -10,7 +10,7 @@ A user story or task is **Done** only when every applicable item below is true.
 - [ ] Backend pricing/authority never trusted from the client.
 
 ## Verification
-- [ ] `npm test` passes (all 15 test cases), including concurrency and expiry scenarios.
+- [ ] `npm test` passes (all 16 test cases), including concurrency and expiry scenarios.
 - [ ] `npm run build` succeeds for both workspaces.
 - [ ] The affected workflow was exercised in the running application or covered by an executed integration test.
 - [ ] Any new requirement has a corresponding acceptance criterion and traceability entry.

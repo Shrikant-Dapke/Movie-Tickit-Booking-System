@@ -75,6 +75,28 @@
     background: linear-gradient(90deg, rgba(8, 9, 12, 0.98) 0%, rgba(8, 9, 12, 0.85) 38%, rgba(8, 9, 12, 0.1) 100%);
   }
 
+  /* Hover-only flourishes collapse on touch devices, where there is no hover.
+     Essential card information is never placed inside this container. */
+  .hover-reveal {
+    max-height: 3rem;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 300ms ease, opacity 300ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hover-reveal {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .group:hover .hover-reveal,
+    .group:focus-within .hover-reveal {
+      max-height: 3rem;
+      opacity: 1;
+    }
+  }
+
   .divider {
     @apply h-px w-full bg-white/[0.07];
   }

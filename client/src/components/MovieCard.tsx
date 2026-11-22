@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CalendarDays, Clapperboard, Star, Ticket } from 'lucide-react';
+import { CalendarDays, Clapperboard, Star, Ticket, UserRound } from 'lucide-react';
 import type { Movie } from '@/types/api';
 import { Badge } from '@/components/ui/Badge';
 import { PosterImage } from '@/components/PosterImage';
@@ -17,6 +17,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
       <PosterImage
         src={movie.poster}
         alt={movie.title}
+        variant="poster"
         className="aspect-[2/3] w-full"
         imgClassName="group-hover:scale-110"
       />
@@ -36,12 +37,24 @@ export function MovieCard({ movie }: { movie: Movie }) {
         <h3 className="line-clamp-2 font-display text-2xl leading-tight tracking-wide text-white transition-colors group-hover:text-brand-300">
           {movie.title}
         </h3>
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-300">
+
+        {/* Always-visible metadata — never hidden behind hover. */}
+        <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-300">
+          <span className="rounded border border-white/20 bg-black/30 px-1.5 py-0.5 font-semibold uppercase tracking-wide text-slate-200">
+            {movie.certificate}
+          </span>
           <span>{movie.language}</span>
           <span className="h-1 w-1 rounded-full bg-slate-500" />
           <span>{pluralize(movie.duration, 'min')}</span>
         </div>
-        <div className="mt-3 flex max-h-0 items-center justify-between overflow-hidden opacity-0 transition-all duration-300 group-hover:max-h-12 group-hover:opacity-100">
+        {movie.director && (
+          <p className="mt-1 flex items-center gap-1.5 truncate text-[11px] text-slate-400">
+            <UserRound className="h-3.5 w-3.5 shrink-0 text-brand-400" aria-hidden="true" />
+            <span className="truncate">{movie.director}</span>
+          </p>
+        )}
+
+        <div className="hover-reveal mt-3 flex items-center justify-between">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white">
             <Ticket className="h-4 w-4 text-brand-500" /> {showing ? 'Book tickets' : 'View details'}
           </span>

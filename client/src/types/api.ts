@@ -38,11 +38,15 @@ export interface Movie {
   rating: number;
   cast: string[];
   poster: string;
-  backdrop: string;
-  trailerUrl: string;
+  backdrop?: string;
+  trailerUrl?: string;
   status: MovieStatus;
   featured: boolean;
   trending: boolean;
+  /** Optional enrichment supplied by the catalogue seed. */
+  director?: string;
+  synopsis?: string;
+  popularity?: number;
 }
 
 export interface Theatre {
@@ -52,6 +56,9 @@ export interface Theatre {
   address: string;
   amenities: string[];
   phone: string;
+  /** Optional enrichment supplied by the catalogue seed. */
+  area?: string;
+  chain?: string;
 }
 
 export interface SeatCategory {
@@ -171,6 +178,7 @@ export interface Payment {
   simulated: true;
   transactionId: string;
   failureReason?: string;
+  seeded?: boolean;
   createdAt: string;
 }
 
@@ -196,6 +204,8 @@ export interface Booking {
   paymentStatus: PaymentStatus;
   payment?: Payment | string;
   paymentSummary?: PaymentSummary;
+  /** Demo/seed records are flagged by the API when available. */
+  seeded?: boolean;
   createdAt: string;
 }
 

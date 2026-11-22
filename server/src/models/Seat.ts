@@ -9,6 +9,7 @@ const seatSchema = new Schema(
     number: { type: Number, required: true },
     category: { type: String, enum: ['Regular', 'Premium', 'Recliner'], required: true },
     basePrice: { type: Number, required: true, min: 1 },
+    seeded: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

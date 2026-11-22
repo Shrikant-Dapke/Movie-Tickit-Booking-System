@@ -46,7 +46,7 @@ HISTORY 1 | ADMIN OVERVIEW bookings=1 revenue=396
 ```
 
 ### Automated + build checks (executed)
-`npm run typecheck` ✅ · `npm test` **15/15 passed** · `npm run build` ✅
+`npm run typecheck` ✅ · `npm test` **16/16 passed** · `npm run build` ✅
 
 ### Browser walkthrough (real Chrome, executed)
 - Homepage: 8 seeded movies from MongoDB, featured/trending/now-showing/upcoming sections.

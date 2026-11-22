@@ -26,7 +26,19 @@ moviesRouter.get(
     if (featured) filter.featured = featured === 'true';
 
     const movies = await Movie.find(filter).sort({ featured: -1, trending: -1, releaseDate: -1, title: 1 });
-    ok(res, movies);
+    // A legacy catalogue record may still exist because a genuine booking
+    // references it. Hide duplicates by title, preferring the seeded record.
+    const quality = (movie: (typeof movies)[number]) =>
+      Number(movie.seeded === true) + Number(!!movie.director) + Number(!!movie.synopsis) + Number((movie.popularity ?? 0) > 0);
+    const byTitle = new Map<string, (typeof movies)[number]>();
+    for (const movie of movies) {
+      const key = movie.title.trim().toLowerCase();
+      const existing = byTitle.get(key);
+      // Prefer the richer seeded record so customers see the new metadata
+      // (director, synopsis, wide backdrop, popularity).
+      if (!existing || quality(movie) > quality(existing)) byTitle.set(key, movie);
+    }
+    ok(res, [...byTitle.values()]);
   }),
 );
 

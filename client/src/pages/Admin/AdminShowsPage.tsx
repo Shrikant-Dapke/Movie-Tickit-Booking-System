@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { CalendarDays, Clapperboard, Plus } from 'lucide-react';
 import { moviesApi, screensApi, showsApi, theatresApi } from '@/api/client';
+import { PosterImage } from '@/components/PosterImage';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui';
 import { ConfirmModal, Modal } from '@/components/ui/Modal';
@@ -125,29 +126,47 @@ export default function AdminShowsPage() {
         <ErrorState title="Shows unavailable" message={showsQuery.error instanceof Error ? showsQuery.error.message : undefined} onRetry={() => showsQuery.refetch()} />
       ) : showsQuery.data?.length ? (
         <AdminTable headers={['Movie', 'Theatre / Screen', 'Date & time', 'Format', 'Prices', 'Status', 'Actions']}>
-          {showsQuery.data.map((show) => (
-            <tr key={show.id}>
-              <td className="px-4 py-3 font-semibold text-white">{show.movie?.title ?? '—'}</td>
-              <td className="px-4 py-3 text-xs text-slate-300">
-                {show.theatre?.name ?? '—'}
-                <span className="block text-slate-500">{show.screen?.name ?? '—'} · {show.theatre?.city ?? ''}</span>
-              </td>
-              <td className="px-4 py-3 text-xs text-slate-300">
-                {formatLongDate(show.date)}
-                <span className="block text-slate-500">{formatTime12(show.time)}</span>
-              </td>
-              <td className="px-4 py-3"><Badge tone="blue">{show.format}</Badge></td>
-              <td className="px-4 py-3 text-xs text-slate-400">
-                {formatCurrency(show.pricing?.Regular)} / {formatCurrency(show.pricing?.Premium)} / {formatCurrency(show.pricing?.Recliner)}
-              </td>
-              <td className="px-4 py-3">
-                <Badge tone={show.status === 'scheduled' ? 'green' : 'red'}>{show.status}</Badge>
-              </td>
-              <td className="px-4 py-3">
-                <RowActions onEdit={() => { setEditing(show); setFormOpen(true); }} onDelete={() => setDeleting(show)} />
-              </td>
-            </tr>
-          ))}
+          {showsQuery.data.map((show) => {
+            const screenFormat = typeof show.screen === 'object' && show.screen ? show.screen.format : undefined;
+            return (
+              <tr key={show.id}>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <PosterImage
+                      src={show.movie?.poster}
+                      alt={show.movie?.title ?? 'Movie'}
+                      className="aspect-[2/3] w-9 shrink-0 rounded-md"
+                    />
+                    <div className="min-w-0">
+                      <p className="font-semibold text-white">{show.movie?.title ?? '—'}</p>
+                      <p className="text-[11px] text-slate-500">{show.movie?.language ?? ''}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-xs text-slate-300">
+                  {show.theatre?.name ?? '—'}
+                  <span className="block text-slate-500">{show.screen?.name ?? '—'} · {show.theatre?.city ?? ''}</span>
+                </td>
+                <td className="px-4 py-3 text-xs text-slate-300">
+                  {formatLongDate(show.date)}
+                  <span className="block text-slate-500">{formatTime12(show.time)}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <Badge tone="blue">{show.format}</Badge>
+                  {screenFormat && <span className="mt-1 block text-[11px] text-slate-500">Screen: {screenFormat}</span>}
+                </td>
+                <td className="px-4 py-3 text-xs text-slate-400">
+                  {formatCurrency(show.pricing?.Regular)} / {formatCurrency(show.pricing?.Premium)} / {formatCurrency(show.pricing?.Recliner)}
+                </td>
+                <td className="px-4 py-3">
+                  <Badge tone={show.status === 'scheduled' ? 'green' : 'red'}>{show.status}</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <RowActions onEdit={() => { setEditing(show); setFormOpen(true); }} onDelete={() => setDeleting(show)} />
+                </td>
+              </tr>
+            );
+          })}
         </AdminTable>
       ) : (
         <EmptyState icon={<CalendarDays className="h-7 w-7" />} title="No shows found" description="Create a show or adjust your filters." action={<Button onClick={() => { setEditing(null); setFormOpen(true); }}>Add show</Button>} />

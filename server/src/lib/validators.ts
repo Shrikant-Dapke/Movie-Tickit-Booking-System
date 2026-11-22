@@ -29,6 +29,9 @@ const stringList = z.array(z.string().trim().min(1)).default([]);
 export const movieSchema = z.object({
   title: z.string().trim().min(1).max(160),
   description: z.string().trim().min(10).max(4000),
+  synopsis: z.string().trim().max(4000).optional(),
+  director: z.string().trim().max(120).optional(),
+  popularity: z.number().min(0).max(1000).optional(),
   genre: stringList,
   language: z.string().trim().min(1).max(40).default('English'),
   format: z.array(z.enum(['2D', '3D', 'IMAX'])).default(['2D']),
@@ -48,6 +51,8 @@ export const movieSchema = z.object({
 export const theatreSchema = z.object({
   name: z.string().trim().min(2).max(120),
   city: z.string().trim().min(2).max(80),
+  area: z.string().trim().max(80).optional(),
+  chain: z.string().trim().max(80).optional(),
   address: z.string().trim().min(4).max(240),
   phone: z.string().trim().max(20).optional(),
   amenities: stringList,

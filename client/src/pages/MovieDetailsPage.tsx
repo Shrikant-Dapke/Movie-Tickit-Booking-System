@@ -9,6 +9,7 @@ import {
   Play,
   Star,
   Ticket,
+  UserRound,
   X,
 } from 'lucide-react';
 import { moviesApi, showsApi } from '@/api/client';
@@ -18,7 +19,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { EmptyState, ErrorState } from '@/components/ui/States';
 import { PageLoader } from '@/components/ui/Spinner';
-import { formatDate, formatLongDate, pluralize, youtubeId } from '@/lib/utils';
+import { formatDate, formatLongDate, getInitials, pluralize, youtubeId } from '@/lib/utils';
 import type { Show } from '@/types/api';
 
 export default function MovieDetailsPage() {
@@ -81,11 +82,14 @@ export default function MovieDetailsPage() {
           <PosterImage
             src={movie.backdrop || movie.poster}
             alt={movie.title}
+            variant="backdrop"
+            eager
             className="h-full w-full"
             imgClassName="scale-105"
           />
           <div className="hero-shade absolute inset-0" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/40 to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(229,9,20,0.14),transparent_45%)]" />
         </div>
         <div className="container-cine relative py-10 sm:py-16">
           <Link to="/" className="mb-8 inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-white">
@@ -122,6 +126,13 @@ export default function MovieDetailsPage() {
                 ))}
               </div>
               <p className="mt-5 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">{movie.description}</p>
+              {movie.director && (
+                <p className="mt-3 inline-flex items-center gap-2 text-sm text-slate-300">
+                  <UserRound className="h-4 w-4 text-brand-400" aria-hidden="true" />
+                  <span className="text-slate-500">Directed by</span>
+                  <span className="font-semibold text-white">{movie.director}</span>
+                </p>
+              )}
               <div className="mt-6 flex flex-wrap gap-3">
                 {videoId && (
                   <button
@@ -146,6 +157,13 @@ export default function MovieDetailsPage() {
 
       <div className="container-cine grid gap-10 py-10 lg:grid-cols-[1fr_320px]">
         <section id="showtimes">
+          {movie.synopsis && (
+            <div className="surface mb-8 p-5 sm:p-6">
+              <p className="mb-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-500">The story</p>
+              <h2 className="font-display text-2xl tracking-wide text-white sm:text-3xl">Synopsis</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">{movie.synopsis}</p>
+            </div>
+          )}
           <div className="mb-5">
             <p className="mb-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-500">Schedule</p>
             <h2 className="font-display text-3xl tracking-wide text-white sm:text-4xl">Choose a showtime</h2>
@@ -192,6 +210,7 @@ export default function MovieDetailsPage() {
         <aside className="space-y-5">
           <div className="surface p-5">
             <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-300">Movie details</h3>
+            {movie.director && <Detail label="Director" value={movie.director} />}
             <Detail label="Language" value={movie.language} />
             <Detail label="Genres" value={movie.genre.join(', ') || '—'} />
             <Detail label="Formats" value={movie.format.join(', ') || '—'} />
@@ -204,7 +223,10 @@ export default function MovieDetailsPage() {
             {movie.cast.length ? (
               <div className="flex flex-wrap gap-2">
                 {movie.cast.map((actor) => (
-                  <span key={actor} className="rounded-lg border border-white/10 bg-ink-800 px-3 py-1.5 text-xs text-slate-300">
+                  <span key={actor} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-ink-800 py-1 pl-1 pr-3 text-xs text-slate-300">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-500/15 text-[10px] font-bold text-brand-300">
+                      {getInitials(actor)}
+                    </span>
                     {actor}
                   </span>
                 ))}

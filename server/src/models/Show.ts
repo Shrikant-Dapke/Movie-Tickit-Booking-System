@@ -20,6 +20,7 @@ const showSchema = new Schema(
     format: { type: String, enum: ['2D', '3D', 'IMAX'], default: '2D' },
     pricing: { type: pricingSchema, required: true },
     status: { type: String, enum: ['scheduled', 'cancelled'], default: 'scheduled', index: true },
+    seeded: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

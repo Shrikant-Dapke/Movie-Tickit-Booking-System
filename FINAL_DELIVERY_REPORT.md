@@ -236,7 +236,7 @@ Promo codes: `CINEBOOK10`, `FIRSTSHOW20`.
 | Every brief requirement implemented | ✅ |
 | Every requirement has a verifiable acceptance criterion | ✅ (`IMPLEMENTATION_PLAN.md`, `USER_STORIES.md`) |
 | Frontend and backend build successfully | ✅ executed |
-| Database integration works | ✅ seed + 15 integration tests + live demo |
+| Database integration works | ✅ seed + 16 integration tests + live demo |
 | Authentication and authorization work | ✅ executed |
 | Complete customer booking workflow works | ✅ live browser verified |
 | Admin workflows work | ✅ live browser verified |

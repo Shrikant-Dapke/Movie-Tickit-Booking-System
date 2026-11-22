@@ -20,6 +20,7 @@ const screenSchema = new Schema(
     rows: { type: Number, required: true, min: 1, max: 26 },
     seatsPerRow: { type: Number, required: true, min: 1, max: 30 },
     categories: { type: [categorySchema], required: true },
+    seeded: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

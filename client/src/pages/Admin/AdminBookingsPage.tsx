@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Eye, Ticket, UserRound } from 'lucide-react';
 import { adminApi, bookingsApi } from '@/api/client';
+import { PosterImage } from '@/components/PosterImage';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Select } from '@/components/ui';
@@ -67,17 +69,35 @@ export default function AdminBookingsPage() {
       ) : bookingsQuery.data?.length ? (
         <AdminTable headers={['Booking', 'Customer', 'Movie / Show', 'Amount', 'Status', 'Payment', 'Actions']}>
           {bookingsQuery.data.map((booking) => {
-            const customer = typeof booking.user === 'object' && booking.user ? booking.user.name : 'Customer';
+            const user = typeof booking.user === 'object' && booking.user ? booking.user : null;
+            const customer = user?.name ?? 'Customer';
             return (
               <tr key={booking.id}>
                 <td className="px-4 py-3">
-                  <p className="font-mono text-xs font-semibold text-brand-400">{booking.code}</p>
-                  <p className="text-[11px] text-slate-500">{formatDateTime(booking.createdAt)}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-mono text-xs font-semibold text-brand-400">{booking.code}</p>
+                    {booking.seeded && <Badge tone="amber" className="px-1.5 py-0 text-[9px]">Demo record</Badge>}
+                  </div>
+                  <p className="mt-0.5 text-[11px] text-slate-500">{formatDateTime(booking.createdAt)}</p>
                 </td>
-                <td className="px-4 py-3 text-slate-300">{customer}</td>
-                <td className="px-4 py-3 text-xs text-slate-300">
-                  {booking.show?.movie?.title ?? '—'}
-                  <span className="block text-slate-500">{booking.show?.theatre?.name ?? ''} · {formatTime12(booking.show?.time)}</span>
+                <td className="px-4 py-3">
+                  <p className="text-slate-300">{customer}</p>
+                  <p className="text-[11px] text-slate-500">{user?.email ?? '—'}</p>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <PosterImage
+                      src={booking.show?.movie?.poster}
+                      alt={booking.show?.movie?.title ?? 'Movie'}
+                      className="aspect-[2/3] w-9 shrink-0 rounded-md"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-xs text-slate-300">{booking.show?.movie?.title ?? '—'}</p>
+                      <span className="block text-[11px] text-slate-500">
+                        {booking.show?.theatre?.name ?? ''} · {formatTime12(booking.show?.time)}
+                      </span>
+                    </div>
+                  </div>
                 </td>
                 <td className="px-4 py-3 font-semibold text-emerald-400">{formatCurrency(booking.total)}</td>
                 <td className="px-4 py-3"><StatusBadge status={booking.status} /></td>
@@ -142,8 +162,9 @@ function BookingDetail({
           <p className="font-mono text-lg font-semibold text-brand-400">{booking.code}</p>
           <p className="text-xs text-slate-500">Created {formatDateTime(booking.createdAt)}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <StatusBadge status={booking.status} />
+          {booking.seeded && <Badge tone="amber" className="px-1.5 py-0 text-[9px]">Demo record</Badge>}
           <Link
             to={`/ticket/${booking.id}`}
             className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-xs font-medium text-slate-300 transition hover:border-brand-500/40 hover:text-white"
@@ -162,9 +183,18 @@ function BookingDetail({
         </Card>
         <Card>
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">Show</p>
-          <p className="text-sm font-semibold text-white">{booking.show?.movie?.title ?? '—'}</p>
-          <p className="text-xs text-slate-400">{booking.show?.theatre?.name ?? '—'} · {booking.show?.screen?.name ?? '—'}</p>
-          <p className="text-xs text-slate-500">{booking.show?.date} · {formatTime12(booking.show?.time)}</p>
+          <div className="flex items-start gap-3">
+            <PosterImage
+              src={booking.show?.movie?.poster}
+              alt={booking.show?.movie?.title ?? 'Movie'}
+              className="aspect-[2/3] w-12 shrink-0 rounded-md"
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-white">{booking.show?.movie?.title ?? '—'}</p>
+              <p className="text-xs text-slate-400">{booking.show?.theatre?.name ?? '—'} · {booking.show?.screen?.name ?? '—'}</p>
+              <p className="text-xs text-slate-500">{booking.show?.date} · {formatTime12(booking.show?.time)}</p>
+            </div>
+          </div>
         </Card>
       </div>
 

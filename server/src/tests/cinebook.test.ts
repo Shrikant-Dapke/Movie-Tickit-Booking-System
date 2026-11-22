@@ -12,6 +12,7 @@ import { Seat } from '../models/Seat.js';
 import { SeatHold } from '../models/SeatHold.js';
 import { Show } from '../models/Show.js';
 import { Booking } from '../models/Booking.js';
+import { Promo } from '../models/Promo.js';
 
 const app = createApp();
 const api = () => request(app);
@@ -302,6 +303,30 @@ describe('TC-15 — Poster upload (positive / negative)', () => {
 
     const invalid = await api().post(endpoint).set('Authorization', `Bearer ${admin.token}`).attach('poster', Buffer.from('not an image'), { filename: 'bad.txt', contentType: 'text/plain' });
     expect(invalid.status).toBe(400);
+  });
+});
+
+describe('TC-16 — Promo validation: percent, fixed, expiry and usage limits', () => {
+  it('applies percentage and fixed discounts and rejects expired/exhausted codes', async () => {
+    const { token } = await makeUser();
+    const auth = { Authorization: `Bearer ${token}` };
+    const validate = (code: string, amount: number) =>
+      api().post('/api/promo/validate').set(auth).send({ code, amount });
+
+    await Promo.create({ code: 'SAVE10', type: 'percent', discountPercent: 10, maxDiscount: 100, minAmount: 0, active: true });
+    expect((await validate('SAVE10', 1000)).body.data).toMatchObject({ discount: 100, total: 900 });
+
+    await Promo.create({ code: 'FLAT200', type: 'fixed', fixedAmount: 200, maxDiscount: 200, minAmount: 500, active: true });
+    expect((await validate('FLAT200', 1000)).body.data).toMatchObject({ discount: 200, total: 800 });
+
+    await Promo.create({ code: 'TOOSMALL', type: 'fixed', fixedAmount: 50, minAmount: 2000, active: true });
+    expect((await validate('TOOSMALL', 1000)).status).toBe(400);
+
+    await Promo.create({ code: 'EXPIRED', type: 'percent', discountPercent: 10, maxDiscount: 100, expiresAt: new Date(Date.now() - 1000), active: true });
+    expect((await validate('EXPIRED', 1000)).status).toBe(400);
+
+    await Promo.create({ code: 'LIMITED', type: 'percent', discountPercent: 10, maxDiscount: 100, maxUses: 5, usedCount: 5, active: true });
+    expect((await validate('LIMITED', 1000)).status).toBe(400);
   });
 });
 

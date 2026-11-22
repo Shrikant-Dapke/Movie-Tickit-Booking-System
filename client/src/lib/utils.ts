@@ -14,7 +14,10 @@ export function formatCurrency(amount: number | undefined | null): string {
 
 export function formatDate(value?: string, options?: Intl.DateTimeFormatOptions): string {
   if (!value) return '—';
-  const date = new Date(`${value}T00:00:00`);
+  // Mongoose serialises Date fields as ISO strings; show dates are plain
+  // YYYY-MM-DD. Handle both without producing "Invalid Date" or raw ISO text.
+  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
+  const date = new Date(isDateOnly ? `${value}T00:00:00` : value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleDateString('en-IN', options ?? { day: 'numeric', month: 'short', year: 'numeric' });
 }

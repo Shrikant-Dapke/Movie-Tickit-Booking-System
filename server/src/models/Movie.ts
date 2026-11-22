@@ -5,6 +5,10 @@ const movieSchema = new Schema(
   {
     title: { type: String, required: true, trim: true, maxlength: 160 },
     description: { type: String, required: true, trim: true, maxlength: 4000 },
+    synopsis: { type: String, trim: true, maxlength: 4000 },
+    director: { type: String, trim: true, maxlength: 120 },
+    popularity: { type: Number, default: 0 },
+    seeded: { type: Boolean, default: false },
     genre: { type: [String], default: [], index: true },
     language: { type: String, default: 'English', index: true },
     format: { type: [String], default: ['2D'], index: true },

@@ -11,6 +11,7 @@ const paymentSchema = new Schema(
     transactionId: { type: String, required: true, unique: true },
     failureReason: String,
     simulated: { type: Boolean, default: true },
+    seeded: { type: Boolean, default: false },
   },
   { timestamps: true, toJSON: jsonOptions },
 );

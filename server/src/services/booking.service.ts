@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import mongoose, { type ClientSession } from 'mongoose';
 import { Booking } from '../models/Booking.js';
 import { Payment } from '../models/Payment.js';
-import { Promo } from '../models/Promo.js';
+import { evaluatePromo } from './promo.service.js';
 import { Seat } from '../models/Seat.js';
 import { SeatHold } from '../models/SeatHold.js';
 import { Show } from '../models/Show.js';
@@ -38,10 +38,7 @@ const computePricing = async (showId: string, seats: string[], promoCode?: strin
 
   let discount = 0;
   if (promoCode) {
-    const promo = await Promo.findOne({ code: promoCode.toUpperCase(), active: true });
-    if (!promo || (promo.expiresAt && promo.expiresAt.getTime() < Date.now())) throw badRequest('This promo code is invalid or expired');
-    if (amount < promo.minAmount) throw badRequest(`This code requires a minimum booking of ₹${promo.minAmount}`);
-    discount = Math.min(Math.round((amount * promo.discountPercent) / 100), promo.maxDiscount);
+    discount = (await evaluatePromo(promoCode, amount)).discount;
   }
 
   return { show, lines, amount, discount, total: Math.max(0, amount - discount), promoCode: promoCode?.toUpperCase() };
@@ -68,6 +65,7 @@ export const createBooking = async (userId: string, showId: string, seats: strin
     let created!: InstanceType<typeof Booking>;
     await session.withTransaction(async () => {
       await verifyHolds(userId, showId, seats, session);
+      if (pricing.promoCode) await evaluatePromo(pricing.promoCode, pricing.amount, { session, consume: true });
       created = (await Booking.create(
         [{ code: await generateCode(), user: userId, show: showId, seats: pricing.lines, amount: pricing.amount, discount: pricing.discount, total: pricing.total, promoCode: pricing.promoCode }],
         { session },
