@@ -330,6 +330,47 @@ describe('TC-16 — Promo validation: percent, fixed, expiry and usage limits', 
   });
 });
 
+describe('TC-17 — Customer dashboard summary from real bookings', () => {
+  it('counts only valid upcoming, completed and paid bookings for the logged-in customer', async () => {
+    const { user, token } = await makeUser();
+    const { movie, theatre, screen } = await makeCatalogue();
+    const future = await Show.create({
+      movie: movie._id, theatre: theatre._id, screen: screen._id,
+      date: tomorrow(), time: '19:45', format: '2D', pricing: { Regular: 200, Premium: 400, Recliner: 600 },
+    });
+    const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+    const past = await Show.create({
+      movie: movie._id, theatre: theatre._id, screen: screen._id,
+      date: yesterday, time: '19:45', format: '2D', pricing: { Regular: 200, Premium: 400, Recliner: 600 },
+    });
+    const line = [{ label: 'A1', category: 'Regular', price: 200 }];
+
+    await Booking.create([
+      { code: 'SUMM001', user: user._id, show: future._id, seats: line, amount: 200, discount: 0, total: 200, status: 'confirmed', paymentStatus: 'paid' },
+      { code: 'SUMM002', user: user._id, show: past._id, seats: line, amount: 200, discount: 0, total: 200, status: 'confirmed', paymentStatus: 'paid' },
+      { code: 'SUMM003', user: user._id, show: future._id, seats: line, amount: 200, discount: 0, total: 200, status: 'failed', paymentStatus: 'failed' },
+      { code: 'SUMM004', user: user._id, show: future._id, seats: line, amount: 200, discount: 0, total: 200, status: 'cancelled', paymentStatus: 'refunded' },
+    ]);
+
+    const summary = await api().get('/api/bookings/summary').set('Authorization', `Bearer ${token}`);
+    expect(summary.status).toBe(200);
+    expect(summary.body.data).toMatchObject({
+      totalBookings: 4,
+      upcomingBookings: 1,
+      completedBookings: 1,
+      moviesWatched: 1,
+      totalSpent: 400,
+    });
+    expect(summary.body.data.nextUpcoming.code).toBe('SUMM001');
+    expect(summary.body.data.recentActivity).toHaveLength(4);
+
+    const other = await makeUser();
+    const empty = await api().get('/api/bookings/summary').set('Authorization', `Bearer ${other.token}`);
+    expect(empty.body.data).toMatchObject({ totalBookings: 0, upcomingBookings: 0, moviesWatched: 0, totalSpent: 0 });
+    expect(empty.body.data.nextUpcoming).toBeNull();
+  });
+});
+
 describe('TC-14 — End-to-end customer workflow', () => {
   it('register → browse → show → seats → hold → book → pay → ticket → history', async () => {
     const registered = await api().post('/api/auth/register').send({ name: 'Workflow User', email: 'workflow@example.com', password: 'Password123!' });

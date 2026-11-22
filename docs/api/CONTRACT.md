@@ -65,6 +65,7 @@ POST `/promo/validate` (auth) `{code,amount}` → `{code,discountPercent,discoun
 | POST | `/bookings` | `{showId,seats:string[],promoCode?}` → `Booking` with `paymentSummary`; verifies holds + recomputes price server-side |
 | POST | `/bookings/:id/pay` | `{method:'card'\|'upi'\|'netbanking', outcome:'success'\|'failure'}` → `Booking` confirmed; `402` on simulated failure |
 | GET | `/bookings/mine` | → `Booking[]` (populated) |
+| GET | `/bookings/summary` | → `CustomerDashboardSummary`: `totalBookings`, `upcomingBookings`, `completedBookings`, `moviesWatched`, `totalSpent`, `nextUpcoming`, `recentActivity[]`. All values derived from the authenticated customer's MongoDB bookings; failed/cancelled payments are excluded from spend. |
 | GET | `/bookings/:id` | → `Booking` (populated) |
 | GET | `/bookings/:id/ticket` | → `{booking,qrDataUrl,downloadHtml}` |
 | DELETE | `/bookings/:id` | cancel own pending booking |

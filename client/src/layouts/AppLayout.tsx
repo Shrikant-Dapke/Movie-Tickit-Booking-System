@@ -31,7 +31,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
 
 const NAV_ITEMS = [
   { to: '/', label: 'Movies', key: 'movies' },
-  { to: '/dashboard?tab=bookings', label: 'My Bookings', key: 'bookings' },
+  { to: '/bookings', label: 'My Bookings', key: 'bookings' },
   { to: '/dashboard', label: 'Dashboard', key: 'dashboard' },
 ];
 
@@ -65,8 +65,8 @@ export function AppLayout() {
 
   const isNavActive = (key: string) => {
     if (key === 'movies') return location.pathname === '/';
-    if (key === 'bookings') return location.pathname === '/dashboard' && location.search.includes('tab=bookings');
-    if (key === 'dashboard') return location.pathname === '/dashboard' && !location.search.includes('tab=bookings');
+    if (key === 'bookings') return location.pathname === '/bookings';
+    if (key === 'dashboard') return location.pathname === '/dashboard';
     return false;
   };
 
@@ -119,7 +119,7 @@ export function AppLayout() {
                       <p className="truncate text-xs text-slate-500">{user.email}</p>
                     </div>
                     <MenuLink to="/dashboard" icon={<LayoutDashboard className="h-4 w-4" />}>Dashboard</MenuLink>
-                    <MenuLink to="/dashboard?tab=bookings" icon={<Ticket className="h-4 w-4" />}>My bookings</MenuLink>
+                    <MenuLink to="/bookings" icon={<Ticket className="h-4 w-4" />}>My bookings</MenuLink>
                     {isAdmin && (
                       <MenuLink to="/admin" icon={<ShieldCheck className="h-4 w-4" />}>Admin panel</MenuLink>
                     )}
@@ -224,7 +224,7 @@ export function AppLayout() {
               Your front-row seat to the big screen. Discover movies, pick your favourite seats and book in seconds.
             </p>
           </div>
-          <FooterColumn title="Explore" links={[{ label: 'Now showing', to: '/' }, { label: 'My bookings', to: '/dashboard?tab=bookings' }, { label: 'Dashboard', to: '/dashboard' }]} />
+          <FooterColumn title="Explore" links={[{ label: 'Now showing', to: '/' }, { label: 'My bookings', to: '/bookings' }, { label: 'Dashboard', to: '/dashboard' }]} />
           <FooterColumn title="Account" links={[{ label: 'Sign in', to: '/login' }, { label: 'Create account', to: '/register' }, ...(isAdmin ? [{ label: 'Admin panel', to: '/admin' }] : [])]} />
           <div>
             <h3 className="mb-4 text-sm font-semibold text-white">Good to know</h3>

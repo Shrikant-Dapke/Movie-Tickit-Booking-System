@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/layouts/AppLayout';
 import { RequireAdmin, RequireAuth } from '@/components/RequireAuth';
 import HomePage from '@/pages/HomePage';
@@ -8,7 +8,8 @@ import CheckoutPage from '@/pages/CheckoutPage';
 import BookingConfirmationPage from '@/pages/BookingConfirmationPage';
 import TicketPage from '@/pages/TicketPage';
 import AuthPage from '@/pages/AuthPage';
-import DashboardPage from '@/pages/DashboardPage';
+import CustomerDashboardPage from '@/pages/CustomerDashboardPage';
+import MyBookingsPage from '@/pages/MyBookingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import { AdminLayout } from '@/pages/Admin/AdminLayout';
 import AdminOverviewPage from '@/pages/Admin/AdminOverviewPage';
@@ -17,6 +18,14 @@ import AdminTheatresPage from '@/pages/Admin/AdminTheatresPage';
 import AdminScreensPage from '@/pages/Admin/AdminScreensPage';
 import AdminShowsPage from '@/pages/Admin/AdminShowsPage';
 import AdminBookingsPage from '@/pages/Admin/AdminBookingsPage';
+
+// Older links used /dashboard?tab=bookings. Keep them working by redirecting
+// to the dedicated bookings route, while /dashboard stays the overview page.
+function DashboardRedirect() {
+  const [params] = useSearchParams();
+  if (params.get('tab') === 'bookings') return <Navigate to="/bookings" replace />;
+  return <CustomerDashboardPage />;
+}
 
 export default function App() {
   return (
@@ -63,7 +72,15 @@ export default function App() {
           path="dashboard"
           element={
             <RequireAuth>
-              <DashboardPage />
+              <DashboardRedirect />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="bookings"
+          element={
+            <RequireAuth>
+              <MyBookingsPage />
             </RequireAuth>
           }
         />

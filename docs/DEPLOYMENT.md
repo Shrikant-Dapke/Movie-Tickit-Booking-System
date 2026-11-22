@@ -68,7 +68,7 @@ shows 198 | seatholds 2 | bookings 1 | payments 1 | promos 2
 
 ```bash
 npm run typecheck    # both workspaces
-npm test             # 16 integration tests (in-memory replica set)
+npm test             # 17 integration tests (in-memory replica set)
 npm run build        # production builds
 npm run health       # live API + DB status
 ```

@@ -20,7 +20,7 @@
 | US-14 Booking management | 5 | Done | `GET/PATCH /admin/bookings` |
 | US-15 UI/UX | 13 | Done | design system + responsive pages; build verification |
 | US-16 Validation/security | 8 | Done | Zod schemas, central error handler, bcrypt, JWT |
-| US-17 Automated tests | 13 | Done | **16/16 tests executed and passing** |
+| US-17 Automated tests | 13 | Done | **17/17 tests executed and passing** |
 | US-18 Promo codes | 5 | Done | `modules/promo`, server-side discount |
 | US-19 Hold expiry | 5 | Done | TC-12; TTL + conditional updates |
 | US-20 Delivery docs | 3 | In progress | README / FINAL_DELIVERY_REPORT |

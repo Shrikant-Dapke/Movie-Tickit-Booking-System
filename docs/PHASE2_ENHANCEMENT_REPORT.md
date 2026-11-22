@@ -82,7 +82,7 @@ GET /api/admin/bookings  200 6 bookings, customer populated
 
 ```
 npm run typecheck  ✅ both workspaces
-npm test           ✅ 16/16 passed (new TC-16 covers percent/fixed/min/expiry/usage-limit promos)
+npm test           ✅ 17/17 passed (TC-16 covers promo rules; TC-17 covers the customer dashboard summary)
 npm run build      ✅ Vite build succeeded (543 kB JS / 159 kB gzip, 48 kB CSS)
 ```
 

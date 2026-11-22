@@ -159,7 +159,7 @@ export interface PromoValidation {
 }
 
 export type BookingStatus = 'pending' | 'confirmed' | 'failed' | 'cancelled';
-export type PaymentStatus = 'unpaid' | 'paid' | 'failed';
+export type PaymentStatus = 'unpaid' | 'paid' | 'failed' | 'refunded';
 export type PaymentMethod = 'card' | 'upi' | 'netbanking';
 export type PaymentOutcome = 'success' | 'failure';
 
@@ -207,6 +207,29 @@ export interface Booking {
   /** Demo/seed records are flagged by the API when available. */
   seeded?: boolean;
   createdAt: string;
+}
+
+export interface RecentActivity {
+  id: string;
+  code: string;
+  movie: string;
+  poster: string | null;
+  bookingDate: string;
+  showDate: string | null;
+  showTime: string | null;
+  status: BookingStatus;
+  paymentStatus: PaymentStatus;
+  amount: number;
+}
+
+export interface CustomerDashboardSummary {
+  totalBookings: number;
+  upcomingBookings: number;
+  completedBookings: number;
+  moviesWatched: number;
+  totalSpent: number;
+  nextUpcoming: Booking | null;
+  recentActivity: RecentActivity[];
 }
 
 export interface TicketData {

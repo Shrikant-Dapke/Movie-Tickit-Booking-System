@@ -81,7 +81,7 @@ Seed data: **25 realistic movies** (24 showing, 1 upcoming) with verified poster
 ```bash
 npm run typecheck     # TypeScript, both workspaces
 npm run build         # production builds, both workspaces
-npm test              # 16 integration tests (in-memory replica set)
+npm test              # 17 integration tests (in-memory replica set)
 npm run health        # live API + database status
 ```
 
@@ -96,6 +96,12 @@ The test suite covers: registration/login, RBAC denials, movie search/filters, s
 3. **Failure path:** Hold a seat, choose **failure** in the simulated gateway → booking marked failed and seat released.
 4. **Admin:** Sign in as admin → overview metrics → add/edit a movie, theatre, screen and show → monitor bookings.
 
+## Customer account pages
+
+- `/dashboard` — distinct overview: personalised greeting, real metrics, next upcoming movie, recent activity, quick actions and profile summary.
+- `/bookings` — dedicated booking manager: upcoming / past / all tabs with posters, theatre/screen, seats, amounts, booking and payment status, QR tickets, details and cancellation.
+- Legacy `/dashboard?tab=bookings` links redirect to `/bookings`.
+
 ## API summary
 
 Full contract: `docs/api/CONTRACT.md`.
@@ -105,6 +111,8 @@ Full contract: `docs/api/CONTRACT.md`.
 `GET /api/theatres` · `GET /api/theatres/:id` · `GET/POST /api/theatres/:id/screens` · `GET/PATCH/DELETE /api/screens/:id`
 `GET /api/shows` · `GET /api/shows/:id` · `GET /api/shows/:id/seats` · `POST/DELETE /api/shows/:id/holds` · `POST/PATCH/DELETE /api/shows[/:id]`
 `POST /api/promo/validate` · `POST /api/bookings` · `POST /api/bookings/:id/pay` · `GET /api/bookings/mine` · `GET /api/bookings/:id` · `GET /api/bookings/:id/ticket` · `DELETE /api/bookings/:id`
+`GET /api/bookings/summary` (customer dashboard metrics)
+
 `GET /api/admin/overview` · `GET/PATCH /api/admin/bookings[/:id]` · `GET /api/admin/users`
 
 ## Documentation index

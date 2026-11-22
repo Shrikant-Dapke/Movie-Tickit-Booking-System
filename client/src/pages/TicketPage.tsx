@@ -31,7 +31,7 @@ export default function TicketPage() {
   return (
     <div className="container-cine py-8 sm:py-10">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Link to="/dashboard?tab=bookings" className="inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">
+        <Link to="/bookings" className="inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">
           <ArrowLeft className="h-4 w-4" /> My bookings
         </Link>
         <Link

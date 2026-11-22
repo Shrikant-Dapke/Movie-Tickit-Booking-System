@@ -40,7 +40,7 @@ export default function BookingConfirmationPage() {
           }}
         />
         <div className="mt-6 text-center">
-          <Link to="/dashboard?tab=bookings" className="text-sm font-semibold text-brand-400 hover:text-brand-300">
+          <Link to="/bookings" className="text-sm font-semibold text-brand-400 hover:text-brand-300">
             Go to my bookings
           </Link>
         </div>
@@ -81,7 +81,7 @@ export default function BookingConfirmationPage() {
             <TicketIcon className="h-4 w-4" /> View digital ticket
           </Link>
           <Link
-            to="/dashboard?tab=bookings"
+            to="/bookings"
             className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/15 px-5 text-sm font-semibold text-slate-200 transition hover:bg-white/[0.07]"
           >
             <LayoutDashboard className="h-4 w-4" /> My bookings

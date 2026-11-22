@@ -41,7 +41,7 @@ CineBook/
 | **7 — Booking + simulated payment** | R5, R6, R7 | `modules/bookings`, `payments`, QR | Summary, codes, simulated pay success/fail, digital ticket with QR, download/print | TC-07, TC-09 | ✅ Done |
 | **8 — Dashboards** | R8, R9 | client pages + admin APIs | Customer history/dashboard; admin metrics, CRUD, booking management | TC-10, TC-11 | ✅ Done |
 | **9 — UI/UX & responsive** | R10 | design system, all pages | Dark cinematic theme, skeletons, empty/error states, toasts, dialogs, mobile | client typecheck + build | ✅ Done |
-| **10 — Tests & fixes** | R13, jury §3 | `server/src/tests/*` | ≥5 named cases: positive, negative, boundary, exceptional, concurrency | 16/16 executed and passing | ✅ Done |
+| **10 — Tests & fixes** | R13, jury §3 | `server/src/tests/*` | ≥5 named cases: positive, negative, boundary, exceptional, concurrency | 17/17 executed and passing | ✅ Done |
 | **11 — Delivery** | R14, jury §4–7 | `README.md`, agile docs, `FINAL_DELIVERY_REPORT.md` | Working demo, seed credentials, docs, commits | live browser walkthrough + final verification | ✅ Done |
 
 ---

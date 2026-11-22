@@ -27,6 +27,7 @@ import type {
   TheatreWithScreens,
   User,
   AdminOverview,
+  CustomerDashboardSummary,
   TicketData,
 } from '@/types/api';
 
@@ -184,6 +185,7 @@ export const bookingsApi = {
   pay: (id: string, data: { method: PaymentMethod; outcome: PaymentOutcome }) =>
     post<{ booking: Booking; payment: Payment }>(`/bookings/${id}/pay`, data),
   mine: () => get<Booking[]>('/bookings/mine'),
+  summary: () => get<CustomerDashboardSummary>('/bookings/summary'),
   get: (id: string) => get<Booking>(`/bookings/${id}`),
   ticket: (id: string) => get<TicketData>(`/bookings/${id}/ticket`),
   cancel: (id: string) => del<Booking>(`/bookings/${id}`),

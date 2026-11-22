@@ -55,6 +55,57 @@ bookingsRouter.get(
   }),
 );
 
+// Dedicated customer dashboard data — every metric comes from this customer's
+// own MongoDB bookings, never from client state or hardcoded values.
+bookingsRouter.get(
+  '/summary',
+  authenticate,
+  asyncHandler(async (req, res) => {
+    const bookings = await withDetails(Booking.find({ user: req.user!.sub })).sort({ createdAt: -1 });
+    const now = Date.now();
+    const showTime = (booking: any) => {
+      const date = booking.show?.date;
+      const time = booking.show?.time;
+      return date && time ? new Date(`${date}T${time}:00`).getTime() : 0;
+    };
+
+    const upcoming = bookings.filter(
+      (booking: any) => booking.status === 'confirmed' && showTime(booking) > now,
+    );
+    const completed = bookings.filter(
+      (booking: any) => booking.status === 'confirmed' && showTime(booking) > 0 && showTime(booking) <= now,
+    );
+    const moviesWatched = new Set(
+      completed.map((booking: any) => String(booking.show?.movie?._id ?? booking.show?.movie ?? booking.id)),
+    ).size;
+    const totalSpent = bookings
+      .filter((booking: any) => booking.paymentStatus === 'paid' && !['cancelled', 'failed'].includes(booking.status))
+      .reduce((sum: number, booking: any) => sum + Number(booking.total ?? 0), 0);
+    const nextUpcoming = [...upcoming].sort((a: any, b: any) => showTime(a) - showTime(b))[0] ?? null;
+
+    ok(res, {
+      totalBookings: bookings.length,
+      upcomingBookings: upcoming.length,
+      completedBookings: completed.length,
+      moviesWatched,
+      totalSpent,
+      nextUpcoming,
+      recentActivity: bookings.slice(0, 5).map((booking: any) => ({
+        id: booking.id,
+        code: booking.code,
+        movie: booking.show?.movie?.title ?? 'Movie',
+        poster: booking.show?.movie?.poster ?? null,
+        bookingDate: booking.createdAt,
+        showDate: booking.show?.date ?? null,
+        showTime: booking.show?.time ?? null,
+        status: booking.status,
+        paymentStatus: booking.paymentStatus,
+        amount: booking.total,
+      })),
+    });
+  }),
+);
+
 bookingsRouter.get(
   '/:id',
   authenticate,
