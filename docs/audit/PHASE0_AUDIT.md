@@ -101,8 +101,12 @@ Project complete and tested before jury; source code, database and required file
 |---|---|---|
 | Backend test runtime | **`mongodb-memory-server`** | User-selected; portable, no external dependency for CI/tests |
 | Real MongoDB path | Documented for jury demonstration | User-selected; demo uses a real local MongoDB instance |
+| Transaction-capable test DB | **`MongoMemoryReplSet`** (replica-set memory server), not a standalone memory server | Standing instruction in the user's ChatGPT thread: standalone in-memory MongoDB does not support multi-document transactions, which are required for atomic booking concurrency tests |
 | Git history | Preserved; rebuild committed as new logical milestones | Master instruction |
 | Authoritative jury PDF | Preserved verbatim under `docs/jury/` | Master instruction: never delete authoritative requirement docs |
+
+### Additional source inspected (2026-11-22)
+The user supplied a ChatGPT share link and asked to consult it. The full thread was read via the connected browser. It contains only the user's relays of this project's progress and ChatGPT's advice — it endorses the Phase 0 audit, confirms the two locked testing decisions, and repeats the request for the Jury 1 problem statement. **It contains no project-specific functional requirements.** Content from that thread is treated as advisory context only, never as an authoritative requirement source.
 
 ---
 
