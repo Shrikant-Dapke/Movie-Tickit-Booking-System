@@ -1,0 +1,630 @@
+===== PAGE 1 =====
+ 
+MIT
+ 
+School
+ 
+of
+ 
+Computing,
+ 
+Pune
+ 
+Department
+ 
+of
+ 
+Computer
+ 
+Science
+ 
+&
+ 
+Engineering
+ 
+Agile
+ 
+Software
+ 
+Development
+ 
+Jury
+ 
+Exam
+ 
+Instructions
+  
+Guidelines for Studen ts – Agile Softw are Developmen t Final Jury 
+Dear Studen ts, 
+All studen ts are instruct ed to follow the guidelines belo w for the Final Project Jury of Agile 
+Softw are
+ 
+Developmen t.
+ 
+1. Project Implemen tation 
+1.
+ 
+Continue
+ 
+working
+ 
+on
+ 
+the
+ 
+same
+ 
+problem
+ 
+statemen t
+ 
+assigned
+ 
+during
+ 
+Jury
+ 
+1.
+ 
+Do
+ 
+not
+ 
+chang e
+ 
+your
+ 
+project
+ 
+topic.
+ 
+2.
+ 
+Develop
+ 
+a
+ 
+working
+ 
+applic ation/pr ototype
+ 
+based
+ 
+on
+ 
+the
+ 
+assigned
+ 
+problem
+ 
+statemen t.
+ 
+3.
+ 
+Implemen t
+ 
+the
+ 
+core
+ 
+features
+ 
+and
+ 
+demons trate
+ 
+the
+ 
+comple te
+ 
+end-t o-end
+ 
+workflo w.
+ 
+4.
+ 
+Ensur e
+ 
+that
+ 
+the
+ 
+applic ation
+ 
+runs
+ 
+properly
+ 
+during
+ 
+the
+ 
+jury.
+ 
+A
+ 
+PPT
+ 
+presen tation
+ 
+or
+ 
+static
+ 
+screenshots
+ 
+alone
+ 
+will
+ 
+not
+ 
+be
+ 
+consider ed
+ 
+sufficien t.
+ 
+5.
+ 
+Use
+ 
+appr opria te
+ 
+technologies,
+ 
+programming
+ 
+languag es,
+ 
+databases
+ 
+and
+ 
+developmen t
+ 
+tools.
+ 
+6.
+ 
+Implemen t
+ 
+proper
+ 
+input
+ 
+valida tion
+ 
+and
+ 
+basic
+ 
+error
+ 
+handling.
+ 
+2. Functional Requir emen ts 
+1.
+ 
+All
+ 
+major
+ 
+functionalities
+ 
+men tioned
+ 
+in
+ 
+your
+ 
+assigned
+ 
+problem
+ 
+statemen t
+ 
+mus t
+ 
+be
+ 
+implemen ted.
+ 
+2.
+ 
+The
+ 
+applic ation
+ 
+should
+ 
+accep t
+ 
+user
+ 
+inputs
+ 
+and
+ 
+gener ate
+ 
+appr opria te
+ 
+outputs.
+ 
+3.
+ 
+Implemen t
+ 
+relevant
+ 
+features
+ 
+such
+ 
+as
+ 
+login,
+ 
+registration,
+ 
+sear ch,
+ 
+data
+ 
+entry,
+ 
+upda te,
+ 
+dele te,
+ 
+booking ,
+ 
+tracking
+ 
+or
+ 
+reporting ,
+ 
+wher ever
+ 
+applic able
+ 
+to
+ 
+your
+ 
+project.
+ 
+4.
+ 
+Use
+ 
+sample
+ 
+or
+ 
+dumm y
+ 
+data
+ 
+wher ever
+ 
+real
+ 
+data
+ 
+or
+ 
+external
+ 
+services
+ 
+are
+ 
+not
+ 
+available.
+ 
+5.
+ 
+If
+ 
+any
+ 
+feature
+ 
+is
+ 
+simula ted,
+ 
+clearly
+ 
+men tion
+ 
+that
+ 
+it
+ 
+is
+ 
+a
+ 
+simula tion.
+ 
+3. Testing 
+1.
+ 
+Perform
+ 
+testing
+ 
+before
+ 
+the
+ 
+final
+ 
+jury.
+ 
+===== PAGE 2 =====
+2.
+ 
+Prepar e
+ 
+and
+ 
+demons trate
+ 
+at
+ 
+least
+ 
+five
+ 
+test
+ 
+cases
+ 
+for
+ 
+your
+ 
+applic ation.
+ 
+3.
+ 
+Include:
+ 
+o
+ Positiv e test cases 
+o
+ Negative test cases 
+o
+ Boundar y or exceptional test cases 
+4.
+ 
+Ensur e
+ 
+that
+ 
+the
+ 
+applic ation
+ 
+handles
+ 
+invalid
+ 
+inputs
+ 
+and
+ 
+errors
+ 
+appr opria tely.
+ 
+4. Agile Documen tation and Tools 
+Studen ts mus t main tain and presen t the following Agile artefacts: 
+●
+ Product Backlog with prioritiz ed user stories. 
+●
+ User Stories with accep tance criteria. 
+●
+ Sprin t Planning and Sprin t Backlog. 
+●
+ Definition of Done (DoD). 
+●
+ Sprin t progress and task alloc ation. 
+●
+ Evidence of Agile tool usag e (Jira/Trello or equiv alen t). 
+●
+ GitHub reposit ory with sour ce code and developmen t progress. 
+5. Final Jury Demons tration 
+During the jury, each team mus t: 
+1.
+ 
+Briefly
+ 
+explain
+ 
+the
+ 
+problem
+ 
+statemen t
+ 
+and
+ 
+proposed
+ 
+solution.
+ 
+2.
+ 
+Explain
+ 
+the
+ 
+architectur e
+ 
+and
+ 
+technologies
+ 
+used.
+ 
+3.
+ 
+Demons trate
+ 
+the
+ 
+working
+ 
+applic ation
+ 
+with
+ 
+a
+ 
+comple te
+ 
+workflo w.
+ 
+4.
+ 
+Demons trate
+ 
+the
+ 
+implemen ted
+ 
+features
+ 
+and
+ 
+test
+ 
+cases.
+ 
+5.
+ 
+Explain
+ 
+the
+ 
+Agile
+ 
+methodology/fr ame work
+ 
+adop ted
+ 
+and
+ 
+its
+ 
+implemen tation.
+ 
+6.
+ 
+Explain
+ 
+the
+ 
+challeng es
+ 
+faced
+ 
+and
+ 
+how
+ 
+they
+ 
+were
+ 
+resolv ed.
+ 
+7.
+ 
+Clearly
+ 
+explain
+ 
+the
+ 
+individual
+ 
+contribution
+ 
+of
+ 
+each
+ 
+team
+ 
+member .
+ 
+6. Individual Evalua tion 
+●
+ Every team member mus t be prepar ed to explain the project. 
+===== PAGE 3 =====
+●
+ Each studen t will be evalua ted individually . 
+●
+ Studen ts mus t demons trate a clear under standing of the features they have 
+implemen ted.
+ 
+●
+ All team member s should be presen t and activ ely participa te in the demons tration. 
+7. Import ant Instructions 
+●
+ Ensur e that the project is comple ted and tested before the jury. 
+●
+ Keep the sour ce code, database and requir ed files ready . 
+●
+ Check interne t connectivity and softw are dependencies in advance. 
+●
+ Do not depend entirely on pre-recorded videos or PPT slides. 
+●
+ Main tain professional conduct and be ready to answer ques tions from the evalua tors. 
+Import ant: The final jury will focus on the working prototype, implemen tation of core 
+functionalities,
+ 
+testing,
+ 
+Agile
+ 
+practices
+ 
+and
+ 
+individual
+ 
+contribution.
+ 
+Merely
+ 
+presen ting
+ 
+the
+ 
+design,
+ 
+documen tation
+ 
+or
+ 
+screenshots
+ 
+will
+ 
+not
+ 
+be
+ 
+sufficien t.
+ 
+ 
