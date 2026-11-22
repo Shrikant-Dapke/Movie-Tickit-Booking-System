@@ -32,17 +32,17 @@ CineBook/
 | Phase | Objectives / requirements covered | Files / modules | Acceptance criteria | Tests | Status |
 |---|---|---|---|---|---|
 | **0 — Audit & requirements** | Inspect repo, identify authoritative docs, separate jury process from project features | `docs/audit/PHASE0_AUDIT.md`, `docs/jury/*`, `docs/requirements/*` | All sources inspected; brief preserved; gaps closed | — | ✅ Done |
-| **1 — Foundation** | Workspaces, TS, env config, design tokens | root `package.json`, `server/tsconfig.json`, `client/*config`, Tailwind theme | `npm install`, typecheck, empty Vite build succeed | build + typecheck | 🔄 In progress |
-| **2 — Database & API core** | R11 models, R11 REST, central errors, Zod | `server/src/models/*`, `lib/*`, `app.ts` | All 9 models with indexes; consistent error envelope | unit | ⬜ |
-| **3 — Auth & RBAC** | R1, R12 | `modules/auth`, `middleware/auth` | Register/login/logout, bcrypt, JWT, customer/admin RBAC, profile | integration | ⬜ |
-| **4 — Catalogue & discovery** | R2 | `modules/movies`, client catalogue | Search + genre/language/format filters; details with trailer | integration | ⬜ |
-| **5 — Theatres, screens, shows** | R3, R9 | `modules/theatres`, `screens`, `shows` | CRUD + cities + formats + schedule filtering; admin protected | integration | ⬜ |
-| **6 — Seats & atomic locking** | R4, R12 | `modules/seats`, `services/booking.service` | Categories/pricing, states, expiry, max limit, double-booking impossible | concurrency | ⬜ |
-| **7 — Booking + simulated payment** | R5, R6, R7 | `modules/bookings`, `payments`, QR | Summary, codes, simulated pay success/fail, digital ticket with QR, download/print | workflow | ⬜ |
-| **8 — Dashboards** | R8, R9 | client pages + admin APIs | Customer history/dashboard; admin metrics, CRUD, booking management | integration | ⬜ |
-| **9 — UI/UX & responsive** | R10 | design system, all pages | Dark cinematic theme, skeletons, empty/error states, toasts, dialogs, mobile | build + manual | ⬜ |
-| **10 — Tests & fixes** | R13, jury §3 | `server/src/tests/*` | ≥5 named cases: positive, negative, boundary, exceptional, concurrency | full suite | ⬜ |
-| **11 — Delivery** | R14, jury §4–7 | `README.md`, agile docs, `FINAL_DELIVERY_REPORT.md` | Working demo, seed credentials, docs, commits | final verification | ⬜ |
+| **1 — Foundation** | Workspaces, TS, env config, design tokens | root `package.json`, `server/tsconfig.json`, `client/*config`, Tailwind theme | `npm install`, typecheck, builds succeed | build + typecheck | ✅ Done |
+| **2 — Database & API core** | R11 models, R11 REST, central errors, Zod | `server/src/models/*`, `lib/*`, `app.ts` | 10 models with indexes; consistent error envelope | typecheck + integration | ✅ Done |
+| **3 — Auth & RBAC** | R1, R12 | `modules/auth`, `middleware/auth` | Register/login/logout, bcrypt, JWT, customer/admin RBAC, profile | TC-01, TC-02 | ✅ Done |
+| **4 — Catalogue & discovery** | R2 | `modules/movies`, client catalogue | Search + genre/language/format filters; details with trailer | TC-03 | ✅ Done |
+| **5 — Theatres, screens, shows** | R3, R9 | `modules/theatres`, `screens`, `shows` | CRUD + cities + formats + schedule filtering; admin protected | TC-04, TC-11 | ✅ Done |
+| **6 — Seats & atomic locking** | R4, R12 | `modules/seats`, `services/booking.service` | Categories/pricing, states, expiry, max limit, double-booking impossible | TC-05, TC-06, TC-08, TC-12 | ✅ Done |
+| **7 — Booking + simulated payment** | R5, R6, R7 | `modules/bookings`, `payments`, QR | Summary, codes, simulated pay success/fail, digital ticket with QR, download/print | TC-07, TC-09 | ✅ Done |
+| **8 — Dashboards** | R8, R9 | client pages + admin APIs | Customer history/dashboard; admin metrics, CRUD, booking management | TC-10, TC-11 | ✅ Done |
+| **9 — UI/UX & responsive** | R10 | design system, all pages | Dark cinematic theme, skeletons, empty/error states, toasts, dialogs, mobile | client typecheck + build | ✅ Done |
+| **10 — Tests & fixes** | R13, jury §3 | `server/src/tests/*` | ≥5 named cases: positive, negative, boundary, exceptional, concurrency | 15/15 executed and passing | ✅ Done |
+| **11 — Delivery** | R14, jury §4–7 | `README.md`, agile docs, `FINAL_DELIVERY_REPORT.md` | Working demo, seed credentials, docs, commits | final verification | 🔄 In progress |
 
 ---
 
@@ -58,14 +58,14 @@ CineBook/
 | R6 | Simulated payment (success/fail), clearly labelled | `modules/payments` | TC-09 failed payment |
 | R7 | Digital ticket with QR, download/print | `lib/qr`, `components/Ticket` | TC-10 ticket contents |
 | R8 | Customer dashboard: profile, upcoming/previous bookings | `pages/Dashboard` | TC-11 history |
-| R9 | Admin: overview metrics + movie/theatre/screen/show/booking CRUD | `modules/admin`, admin pages | TC-02, TC-12 admin CRUD |
+| R9 | Admin: overview metrics + movie/theatre/screen/show/booking CRUD + poster upload | `modules/admin`, `modules/uploads`, admin pages | TC-02, TC-11 admin CRUD, TC-15 poster upload |
 | R10 | Premium responsive UI, states, animations, toasts | design system + all pages | build + visual check |
 | R11 | MERN, TypeScript, Zod, central errors, 9 models, indexes | whole codebase | typecheck + unit |
 | R12 | Atomic ops, transactions, expiry, authz, validation, backend pricing | `services/booking.service`, middleware | TC-08, TC-13 expired hold |
 | R13 | Automated auth/discovery/seat/booking/payment/admin/invalid tests | `server/src/tests` | full suite |
 | R14 | Complete customer + admin end-to-end workflows | seed + demo | TC-14 E2E customer flow |
 
-> Test cases TC-01…TC-14 are executed with Vitest/Supertest against `MongoMemoryReplSet`; actual results are recorded in `FINAL_DELIVERY_REPORT.md`. No test is reported as passing unless executed.
+> Test cases TC-01…TC-15 are executed with Vitest/Supertest against `MongoMemoryReplSet`; actual results are recorded in `FINAL_DELIVERY_REPORT.md`. No test is reported as passing unless executed.
 
 ---
 

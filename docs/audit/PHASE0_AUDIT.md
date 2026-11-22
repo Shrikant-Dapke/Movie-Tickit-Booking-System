@@ -1,6 +1,6 @@
 # Phase 0 — Repository Audit & Requirements Gap Analysis
 
-**Status:** IN PROGRESS — blocked on authoritative project requirements
+**Status:** COMPLETE — authoritative project brief received and reconciled (see §6)
 **Last updated:** 2026-11-22
 **Authoritative process document:** `docs/jury/End Semester Jury Instructions.pdf` (user-supplied, 3 pages, MIT School of Computing, Pune — Agile Software Development Final Jury)
 **Extracted text:** `docs/jury/END_SEMESTER_JURY_INSTRUCTIONS.extracted.txt`
@@ -132,12 +132,14 @@ The master instruction supplied by the user contains a detailed feature brief (c
 
 ---
 
-## 6. What will happen next
+## 6. Resolution of the blocker (2026-11-22)
 
-1. **BLOCKED:** Do not finalise `IMPLEMENTATION_PLAN.md` or its requirement-to-implementation traceability matrix.
-2. **BLOCKED:** Do not delete the existing application code or start the rebuild.
-3. **Awaiting from user:** the original Jury 1 problem statement / project specification (items 1–3 and 7–9 above are the minimum needed; item 8 is needed before Agile artefacts can be completed).
-4. On receipt: convert every requirement into testable acceptance criteria → register them in the traceability matrix → write and execute the plan → report actual test results only.
+The user supplied the original Movie Ticket Booking System project brief in full. It is preserved verbatim at `docs/requirements/PROJECT_BRIEF.md` and is now the authoritative source for project-specific requirements. The jury PDF remains authoritative only for evaluation process.
+
+- Items 1–5 of §5 are resolved by the brief.
+- Items 6–10 (tech constraint origin, prior Agile artefacts, team composition, actual Agile tool, prescribed demo data) were explicitly deferred by the user/ChatGPT as documentable later; they are recorded as open actions in `docs/agile/SPRINT_PROGRESS.md` and `FINAL_DELIVERY_REPORT.md`, with no values invented.
+- The requirement → acceptance criteria → test traceability matrix is in `IMPLEMENTATION_PLAN.md` §3.
+- The old implementation was removed and the rebuild executed; Git history preserved.
 
 ---
 

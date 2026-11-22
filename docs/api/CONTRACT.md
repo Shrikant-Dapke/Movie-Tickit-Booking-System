@@ -77,5 +77,8 @@ GET `/payments/:id` → `Payment` (auth, owner or admin). `Payment = { id,bookin
 ## Admin (`/admin`) — admin only
 GET `/admin/overview` → `{customers,movies,theatres,shows,bookings,revenue,recentBookings,byStatus}` · GET `/admin/bookings?status=&search=` → `Booking[]` · PATCH `/admin/bookings/:id` → `Booking` · GET `/admin/users` → `User[]`
 
+## Uploads — admin only
+POST `/admin/uploads/poster` — `multipart/form-data` field `poster`, max 5 MB, JPEG/PNG/WebP/GIF → `{url:'/uploads/<id>.jpg', originalName}`. The URL can be used as a movie `poster` or `backdrop` and is served at `/uploads/<file>`.
+
 ## System
 GET `/health` → `{status:'ok',service:'CineBook API'}`

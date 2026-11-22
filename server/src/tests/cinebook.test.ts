@@ -280,6 +280,29 @@ describe('TC-13 — Invalid inputs are rejected (negative / boundary)', () => {
   });
 });
 
+describe('TC-15 — Poster upload (positive / negative)', () => {
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+
+  it('lets an admin upload an image but blocks customers and non-images', async () => {
+    const admin = await makeUser('admin');
+    const customer = await makeUser();
+    const endpoint = '/api/admin/uploads/poster';
+
+    const denied = await api().post(endpoint).set('Authorization', `Bearer ${customer.token}`).attach('poster', png, { filename: 'poster.png', contentType: 'image/png' });
+    expect(denied.status).toBe(403);
+
+    const uploaded = await api().post(endpoint).set('Authorization', `Bearer ${admin.token}`).attach('poster', png, { filename: 'poster.png', contentType: 'image/png' });
+    expect(uploaded.status).toBe(201);
+    expect(uploaded.body.data.url).toMatch(/^\/uploads\/[0-9a-f-]+\.png$/);
+
+    const served = await api().get(uploaded.body.data.url);
+    expect(served.status).toBe(200);
+
+    const invalid = await api().post(endpoint).set('Authorization', `Bearer ${admin.token}`).attach('poster', Buffer.from('not an image'), { filename: 'bad.txt', contentType: 'text/plain' });
+    expect(invalid.status).toBe(400);
+  });
+});
+
 describe('TC-14 — End-to-end customer workflow', () => {
   it('register → browse → show → seats → hold → book → pay → ticket → history', async () => {
     const registered = await api().post('/api/auth/register').send({ name: 'Workflow User', email: 'workflow@example.com', password: 'Password123!' });

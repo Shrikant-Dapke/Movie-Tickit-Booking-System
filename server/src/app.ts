@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import fs from 'node:fs';
 import { env } from './config/env.js';
 import { errorHandler, notFoundHandler, ok } from './lib/http.js';
 import { authRouter } from './modules/auth/auth.routes.js';
@@ -13,6 +14,7 @@ import { bookingsRouter } from './modules/bookings/bookings.routes.js';
 import { paymentsRouter } from './modules/payments/payments.routes.js';
 import { promoRouter } from './modules/promo/promo.routes.js';
 import { adminRouter } from './modules/admin/admin.routes.js';
+import { uploadsDir, uploadsRouter } from './modules/uploads/uploads.routes.js';
 
 export const createApp = () => {
   const app = express();
@@ -21,6 +23,8 @@ export const createApp = () => {
   app.use(helmet());
   app.use(cors({ origin: env.CLIENT_ORIGIN.split(',').map((s) => s.trim()), credentials: true }));
   app.use(express.json({ limit: '1mb' }));
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  app.use('/uploads', express.static(uploadsDir));
   app.use('/api', rateLimit({ windowMs: 60_000, limit: 600, standardHeaders: 'draft-7', legacyHeaders: false }));
 
   app.get('/api/health', (_req, res) => ok(res, { status: 'ok', service: 'CineBook API' }));
@@ -34,6 +38,7 @@ export const createApp = () => {
   app.use('/api/bookings', bookingsRouter);
   app.use('/api/payments', paymentsRouter);
   app.use('/api/promo', promoRouter);
+  app.use('/api/admin/uploads', uploadsRouter);
   app.use('/api/admin', adminRouter);
 
   app.use(notFoundHandler);

@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
 export const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid identifier');
+const imageRef = z.string().refine(
+  (value) => value.startsWith('/uploads/') || z.string().url().safeParse(value).success,
+  'Provide an image URL or upload a poster',
+);
 export const dateString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD').refine((v) => !Number.isNaN(Date.parse(v)), 'Invalid date');
 export const timeString = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Time must be HH:mm');
 
@@ -33,8 +37,8 @@ export const movieSchema = z.object({
   certificate: z.string().trim().max(20).default('UA'),
   rating: z.number().min(0).max(10).default(0),
   cast: stringList,
-  poster: z.string().trim().url('Poster must be a URL'),
-  backdrop: z.string().trim().url().optional().or(z.literal('')),
+  poster: imageRef,
+  backdrop: imageRef.optional().or(z.literal('')),
   trailerUrl: z.string().trim().url().optional().or(z.literal('')),
   status: z.enum(['showing', 'upcoming']).default('showing'),
   featured: z.boolean().default(false),
